@@ -1,0 +1,72 @@
+## -*- coding: utf-8 -*-
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='ru' lang='ru'>
+  <head>
+     <meta http-equiv='Content-Type' content='application/xhtml+xml; charset=utf-8'/>
+     <title>${title}</title>
+     
+     <link rel='shortcut icon' href='favicon.png'/>
+     <link rel='stylesheet' type='text/css' href='style.css'/>
+     
+     <script type='text/javascript' src='jquery.js'></script>
+     <script type='text/javascript' src='script.js'></script>
+  </head>
+  <body>
+    <h1>${title}</h1>
+    
+    <div id='tags_header'>
+      Метки:
+      <a href='' id='toggle_tags'>Скрыть</a>
+      <a href='' id='toggle_popular_tags' class='active_link'>Популярные</a>
+      <a href='' id='toggle_all_tags'>Все</a>
+      <div id='popular_tags'/>
+      <div id='all_tags'/>
+    </div>
+    
+    <div id='chosen_tags'>
+      Фильтр:
+    </div>
+
+    <div id='notes'>
+    %for note in notes:      
+      <table class='note'>
+        <tr>
+          <td class='note_header_td'>
+            <div class='note_header'>
+          
+              %if note.date:
+                <div class='note_date'>${note.date}</div>
+              %endif
+              
+              <div class='note_title'>
+                %if note.link:
+                  <a href='${note.link | h}'>
+                %endif
+                ${note.title | h}
+                %if note.link:
+                  </a>
+                %endif
+              </div>
+            
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class='note_contents'>${note.content}</td>
+        </tr>
+        <tr>
+          <td class='note_tags'>
+          %for tag in note.tags:
+            <a class='note_tag' href=''>${tag}</a>
+          %endfor
+          </td>
+        </tr>
+      </table>
+    %endfor
+    </div>
+    
+  </body>
+</html>
+
