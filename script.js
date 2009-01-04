@@ -109,7 +109,8 @@ var Cloud = new function(){
     $("#popular_tags a.note_tag").remove();
 
     var tags = new Object();
-    var tagsArray = new Array();
+    var tagsArray = new Array();    
+    var notesCountPerTag_max = 1;
     
     $("table.note:visible a.note_tag").each(function(){
       tag = $(this).text();
@@ -118,8 +119,12 @@ var Cloud = new function(){
         tags[tag] = 1;
         tagsArray.push(tag);
       }
-      else
-        tags[tag]++;  
+      else{
+        tags[tag]++;
+        
+        if (tags[tag] > notesCountPerTag_max)
+          notesCountPerTag_max = tags[tag];
+      }
     });
 
     tagsArray.sort(function(a, b){
@@ -130,18 +135,31 @@ var Cloud = new function(){
       if (a1 < b1) return -1;
       return 1;
     });
+    
+    var notesCountPerTag_min = 1;
+    if (tags.length > 0){      
+      var _first = true;
+      for (tag in tags)
+        if (_first){
+          notesCountPerTag_min = tags[tag];
+          _first = false;
+        }
+        else if (tags[tag] < notesCountPerTag_min)
+          notesCountPerTag_min = tags[tag];
+    }
 
-    var notesCount = $("table.note:visible").length;
+    var notesCountPerTag_range = notesCountPerTag_max - notesCountPerTag_min + 1;
     for (index in tagsArray) {
       var tag = tagsArray[index];
       
       if (Filter.isTagChosen(tag))
         continue;
       
-      var _size = tags[tag] / notesCount;
-      if (_size > 0.05)
+      var _size = tags[tag] / notesCountPerTag_range;
+      /* The numbers below was chosen a posteriori */
+      if (_size > 0.3)
         _size = 1;
-      else if (_size > 0.01)
+      else if (_size > 0.1)
         _size = 2;
       else
         _size = 3;
