@@ -5,12 +5,13 @@ DOWNLOADS=                                  \
   jstagnotes-withExample-${VERSION}.zip     \
   jstagnotes-${VERSION}.zip
 
-.PHONY: all downloads upload
+.PHONY: all downloads upload clean
 
 
 all: downloads upload
 downloads: ${DOWNLOADS}
-
+clean:
+	rm ${DOWNLOADS}
 
 upload: ${DOWNLOADS}
 	for d in $?;                                   \
@@ -54,7 +55,7 @@ jstagnotes-${VERSION}.zip:                  \
   style.css
 	mkdir /tmp/jstagnotes/
 	cp $^ /tmp/jstagnotes/
-	zip -u $@ /tmp/jstagnotes/
+	zip -r $@ /tmp/jstagnotes/
 	rm -rf /tmp/jstagnotes/
     
 jstagnotes-withExample-${VERSION}.zip:      \
@@ -66,7 +67,7 @@ jstagnotes-withExample-${VERSION}.zip:      \
   notes3.example.xml
 	mkdir /tmp/jstagnotes/
 	cp $^ /tmp/jstagnotes/
-	zip -u $@ /tmp/jstagnotes/
+	zip -r $@ /tmp/jstagnotes/
 	rm -rf /tmp/jstagnotes/
     
 jstagnotes-all-${VERSION}.zip:              \
@@ -79,7 +80,7 @@ jstagnotes-all-${VERSION}.zip:              \
   style.css
 	mkdir /tmp/jstagnotes/
 	cp $^ /tmp/jstagnotes/
-	zip -u $@ /tmp/jstagnotes/
+	zip -r $@ /tmp/jstagnotes/
 	rm -rf /tmp/jstagnotes/
     
 jstagnotes-all-withExample-${VERSION}.zip:  \
@@ -93,5 +94,5 @@ jstagnotes-all-withExample-${VERSION}.zip:  \
   notes3.example.xml
 	mkdir /tmp/jstagnotes/
 	cp $^ /tmp/jstagnotes/
-	zip -u $@ /tmp/jstagnotes/
+	zip -r $@ /tmp/jstagnotes/
 	rm -rf /tmp/jstagnotes/
