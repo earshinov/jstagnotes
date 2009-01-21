@@ -111,7 +111,7 @@ var Cloud = new function(){
     var tags = new Object();
     var tagsArray = new Array();    
     var notesCountPerTag_max = 1;
-    
+
     $("table.note:visible a.note_tag").each(function(){
       tag = $(this).text();
       
@@ -131,8 +131,9 @@ var Cloud = new function(){
       var a1 = a.toLowerCase();
       var b1 = b.toLowerCase();
 
-      if (a1 == b1) return 0;
+      /* Unfortunately, JavaScript does not provide a method like strcmp */
       if (a1 < b1) return -1;
+      if (a1 == b1) return 0;
       return 1;
     });
     
