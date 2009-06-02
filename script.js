@@ -35,19 +35,6 @@ If this script runs slowly, you may apply the following optiomizations:
 1. CSS class selectors (".class") are slow if no tag is specified. Thus I use
    "tag.class" if the tag is known.
 
-2. We can use jQuery Live Plugin or wait until jQuery 1.3 release become
-   available in order to simplify the code a little by removing
-   tag_setClickHandler() from the code.
-
-   In actual, I've already tried to use both the plugin and jQuery 1.3 Beta 1,
-   but they did not work.
-
-   The plugin did not assign click handler as there were no plugin at all.
-
-   And jQuery 1.3 Beta is not still usable due to an
-   NS_ERROR_INVALID_POINTER exception. I've even tried to convert everything
-   from XHTML to HTML, but it did not help.
-
 */
 
 /* --- Utils ---------------------------------------------------------------- */
@@ -104,12 +91,10 @@ var Cloud = new function(){
   this.addTag = function(tag, size){
     var $allTags = $("#all_tags").append(" ");
     var $a = $("<a href='' class='note_tag tag_size_" + size + "'>" + tag + "</a>").appendTo($allTags);
-    tag_setClickHandler($a);
 
     if (size < 3){
       var $popularTags = $("#popular_tags").append(" ");
-      var $b = $a.clone().appendTo($popularTags);
-      tag_setClickHandler($b);
+      $a.clone().appendTo($popularTags);
     }
   }
 
@@ -197,10 +182,7 @@ var Filter = new function(){
   this.addTag = function(tag){
     this.tags.push(tag);
 
-    var $a = $("<a href='' class='note_tag chosen_tag'>" + tag + "</a>").appendTo($filter);
-    tag_setClickHandler($a);
-
-    $filter.append(" ");
+    $filter.append("<a href='' class='note_tag chosen_tag'>" + tag + "</a> ");
     $filter.show();
 
     Notes.updateForSelectedTag(tag);
@@ -324,18 +306,6 @@ var Notes = new function(){
 
 }();
 
-/* --- Tag utils ------------------------------------------------------------ */
-
-function tag_setClickHandler($tags){
-  $tags.unbind("click").click(function(){
-    if ($(this).hasClass("chosen_tag"))
-      Filter.removeTag($(this).text());
-    else
-      Filter.addTag($(this).text());
-    return false;
-  });
-}
-
 /* --- Startup -------------------------------------------------------------- */
 
 $(document).ready(function(){
@@ -343,7 +313,14 @@ $(document).ready(function(){
   init();
   Cloud.recalculate();
 
-  tag_setClickHandler($("a.note_tag"));
+  $("a.note_tag").live("click", function(){
+    var $this = $(this);
+    if ($this.hasClass("chosen_tag"))
+      Filter.removeTag($this.text());
+    else
+      Filter.addTag($this.text());
+    return false;
+  });
 
   $("#toggle_tags").click(function(){
     if (!$(this).hasClass("active_link")){
@@ -384,3 +361,5 @@ $(document).ready(function(){
     return false;
   });
 });
+
+
