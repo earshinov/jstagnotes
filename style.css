@@ -1,4 +1,4 @@
-/* --- Каркас страницы */
+/* --- Page frame  */
 
 html {
   height: 100%;
@@ -22,7 +22,7 @@ body {
   height: 100%;
 }
 
-/* --- Оформление страницы */
+/* --- Page decoration */
 
 html {
   background-color: Snow;
@@ -35,7 +35,7 @@ body {
   border-right: 1px solid Gray;
 }
 
-/* --- Оформление заголовка  */
+/* --- Header decoration */
 
 h1 {
     /*
@@ -52,7 +52,7 @@ h1 {
   text-align: center;
 }
 
-/* --- Оформление тэгов */
+/* --- Tags decoration */
 
 a.note_tag {
   /* compare with #toggle_tags, ..., #toggle_all_tags */
@@ -83,7 +83,7 @@ a.note_tag.chosen_tag {
   color: Black;
 }
 
-/* --- Оформление облака тэгов и фильтра */
+/* --- Tag cloud and filter decoration */
 
 #cloud, #filter {
   margin: 10px;
@@ -112,7 +112,7 @@ a.note_tag.chosen_tag {
   padding: 0;
 }
 
-/* --- Каркас заметок */
+/* --- Note frame */
 
 div.note {
   margin: 5px 0;
@@ -134,7 +134,7 @@ div.tags {
   padding: 5px 0;
 }
 
-/* --- Внутренности заметок */
+/* --- Note content decoration */
 
 a {
   color: #1D60A3;
@@ -173,7 +173,7 @@ th {
   color: #333333;
 }
 
-/* --- Некоторые элементы должны изначально быть скрыты! -------------------- */
+/* --- Some elements must be initially hidden */
 
 #all_tags,
 #filter {
