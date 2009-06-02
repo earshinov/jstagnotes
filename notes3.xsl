@@ -43,50 +43,50 @@
       Фильтр:
     </div>
 
-    <xsl:apply-templates select='n:note'/>    
+    <div id='notes'>
+      <xsl:apply-templates select='n:note'/>
+    </div>
   </body>
 </html>
 </xsl:template>
   
 <xsl:template match='n:note'>
-<div id='notes'>
-  <table class='note'>
-    <tr>
-      <td class='note_header_td'>
-        <div class='note_header'>
-      
-          <xsl:if test='n:date'>
-            <div class='note_date'><xsl:value-of select='n:date'/></div>
-          </xsl:if>
-          
-          <div class='note_title'>
+<table class='note'>
+  <tr>
+    <td class='note_header_td'>
+      <div class='note_header'>
+    
+        <xsl:if test='n:date'>
+          <div class='note_date'><xsl:value-of select='n:date'/></div>
+        </xsl:if>
+        
+        <div class='note_title'>
 
-            <xsl:choose>
-              <xsl:when test='n:link'>
-                <a href='{n:link}'><xsl:value-of select='n:title'/></a>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select='n:title'/>
-              </xsl:otherwise>
-            </xsl:choose>
-            
-          </div>        
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td class='note_contents'><xsl:copy-of select='n:content'/></td>
-    </tr>
-    <tr>
-      <td class='note_tags'>
-        <xsl:for-each select='n:tags/n:tag'>
-          <a class='note_tag' href=''><xsl:value-of select='.'/></a>
-          <xsl:text> </xsl:text>
-        </xsl:for-each>
-      </td>
-    </tr>
-  </table>
-</div>
+          <xsl:choose>
+            <xsl:when test='n:link'>
+              <a href='{n:link}'><xsl:value-of select='n:title'/></a>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select='n:title'/>
+            </xsl:otherwise>
+          </xsl:choose>
+          
+        </div>        
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td class='note_contents'><xsl:copy-of select='n:content'/></td>
+  </tr>
+  <tr>
+    <td class='note_tags'>
+      <xsl:for-each select='n:tags/n:tag'>
+        <a class='note_tag' href=''><xsl:value-of select='.'/></a>
+        <xsl:text> </xsl:text>
+      </xsl:for-each>
+    </td>
+  </tr>
+</table>
 </xsl:template>
 
 </xsl:stylesheet>
