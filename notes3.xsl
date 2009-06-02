@@ -3,10 +3,14 @@
   xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
   xmlns:n='http://mrShadow.habrahabr.ru/notes3/'
   xmlns='http://www.w3.org/1999/xhtml'
-  exclude-result-prefixes='n'>
+  exclude-result-prefixes='n'
+
+  xmlns:saxon='http://icl.com/saxon'
+  extension-element-prefixes='saxon'>
 <xsl:output method='html' encoding='utf-8' indent='no'
   doctype-public='-//W3C//DTD HTML 4.01//EN'
-  doctype-system='http://www.w3.org/TR/html4/strict.dtd'/>
+  doctype-system='http://www.w3.org/TR/html4/strict.dtd'
+  saxon:character-representation='native;decimal'/>
 
 <xsl:template match='n:notes'>
 <html>
