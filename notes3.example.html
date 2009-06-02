@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -35,6 +35,129 @@
   </div>
 
   <div id="notes">
+    <div class="note">
+      <div class="header">
+        <div class="date">
+          02.06.2009
+        </div>
+
+        <div class="title">
+          Пример заметки с другим форматированием
+        </div>
+      </div>
+
+      <div class="content">
+        <h2>Заголовок h2</h2>
+
+        <p>Горизонтальную черту проводим, используя
+        <span class="pre">&lt;hr noshade='noshade'/&gt;</span>.</p>
+        <hr noshade="noshade" />
+
+        <p>Продолжение: <a href=
+        "http://github.com/earshinov/jstagnotes/">ссылка в тексте</a> и
+        <b>кусок жирного текста</b></p>
+      </div>
+
+      <div class="tags">
+        <a class="note_tag" href="">демонстрация</a>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="header">
+        <div class="date">
+          02.06.2009
+        </div>
+
+        <div class="title">
+          Пример заметки с pre
+        </div>
+      </div>
+
+      <div class="content">
+        <p>Можно использовать моноширинный текст прямо посреди строки,
+        используя <span class="pre">&lt;span class='pre'&gt;</span>. Другой
+        вариант - блок форматированного текста. Пример:</p>
+        <pre>
+this.updateForDeselectedTag = function(tag){
+
+  if (Filter.isEmpty()){
+    $("div.note:visible a.note_tag").removeClass("chosen_tag");
+    $("div.note:hidden").show();
+    return;
+  }
+
+  $("div.note:hidden").each(function(){
+    var $tags = $(this).find("a.note_tag");
+    for (var i = 0; i &lt; Filter.tags.length; i++){
+      if (! $tags.existsText(Filter.tags[i])){
+        return;
+      }
+    }
+    $(this).show();
+  });
+
+  $("div.note a.note_tag").select(
+    function(){
+      return $(this).text() == tag;
+    },
+    function(){
+      $(this).removeClass("chosen_tag");
+    }
+  );
+}
+</pre>
+      </div>
+
+      <div class="tags">
+        <a class="note_tag" href="">демонстрация</a> <a class="note_tag" href=
+        "">pre</a>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="header">
+        <div class="date">
+          02.06.2009
+        </div>
+
+        <div class="title">
+          Пример заметки с таблицей
+        </div>
+      </div>
+
+      <div class="content">
+        <table>
+          <thead>
+            <tr>
+              <th>Столбец 1</th>
+
+              <th>Столбец 2</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Ячейка 1</td>
+
+              <td>Ячейка 2</td>
+            </tr>
+
+            <tr>
+              <td>Ячейка 3</td>
+
+              <td>Ячейка 4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tags">
+        <a class="note_tag" href="">демонстрация</a> <a class="note_tag" href=
+        "">table</a>
+      </div>
+    </div>
+
     <div class="note">
       <div class="header">
         <div class="date">

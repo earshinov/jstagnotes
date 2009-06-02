@@ -32,6 +32,81 @@
   -->
 
   <n:note>
+    <n:title>Пример заметки с другим форматированием</n:title>
+    <n:date>02.06.2009</n:date>
+    <n:content>
+      <h2>Заголовок h2</h2>
+      <p>Горизонтальную черту проводим, используя
+      <span class='pre'>&lt;hr noshade='noshade'/&gt;</span>.</p>
+      <hr noshade='noshade'/>
+      <p>Продолжение: <a href='http://github.com/earshinov/jstagnotes/'>ссылка в тексте</a> и
+      <b>кусок жирного текста</b></p>
+    </n:content>
+    <n:tags>
+      <n:tag>демонстрация</n:tag>
+    </n:tags>
+  </n:note>
+
+  <n:note>
+    <n:title>Пример заметки с pre</n:title>
+    <n:date>02.06.2009</n:date>
+    <n:content>
+      <p>Можно использовать моноширинный текст прямо посреди строки, используя
+      <span class='pre'>&lt;span class='pre'&gt;</span>. Другой вариант - блок
+      форматированного текста. Пример:</p>
+      <pre>this.updateForDeselectedTag = function(tag){
+
+  if (Filter.isEmpty()){
+    $("div.note:visible a.note_tag").removeClass("chosen_tag");
+    $("div.note:hidden").show();
+    return;
+  }
+
+  $("div.note:hidden").each(function(){
+    var $tags = $(this).find("a.note_tag");
+    for (var i = 0; i &lt; Filter.tags.length; i++){
+      if (! $tags.existsText(Filter.tags[i])){
+        return;
+      }
+    }
+    $(this).show();
+  });
+
+  $("div.note a.note_tag").select(
+    function(){
+      return $(this).text() == tag;
+    },
+    function(){
+      $(this).removeClass("chosen_tag");
+    }
+  );
+}</pre>
+    </n:content>
+    <n:tags>
+      <n:tag>демонстрация</n:tag>
+      <n:tag>pre</n:tag>
+    </n:tags>
+  </n:note>
+
+  <n:note>
+    <n:title>Пример заметки с таблицей</n:title>
+    <n:date>02.06.2009</n:date>
+    <n:content>
+      <table>
+        <thead><tr><th>Столбец 1</th><th>Столбец 2</th></tr></thead>
+        <tbody>
+          <tr><td>Ячейка 1</td><td>Ячейка 2</td></tr>
+          <tr><td>Ячейка 3</td><td>Ячейка 4</td></tr>
+        </tbody>
+      </table>
+    </n:content>
+    <n:tags>
+      <n:tag>демонстрация</n:tag>
+      <n:tag>table</n:tag>
+    </n:tags>
+  </n:note>
+
+  <n:note>
     <n:title>Online calculator with symbolic calculations and graphs</n:title>
     <n:date>14.04.2007</n:date>
     <n:link>http://www.calc5.com/</n:link>
@@ -216,4 +291,3 @@
   </n:note>
       
 </n:notes>
-
