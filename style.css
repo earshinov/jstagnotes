@@ -18,6 +18,7 @@ body {
   padding-bottom: 1px;
 }
 * html body {
+  width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
   height: 100%;
 }
 
