@@ -70,8 +70,7 @@ function array_remove(array, element) {
 jQuery.fn.exists = function(fn){
   var ret = false;
   $(this).each(function(){
-    this.fn = fn; // 'this' must be available in 'fn'
-    if (this.fn()){
+    if (fn.call(this)){
       ret = true;
       return false; // break from 'each'
     }
@@ -87,11 +86,8 @@ jQuery.fn.existsText = function(text){
 
 jQuery.fn.select = function(fn, callback){
   $(this).each(function(){
-    this.fn = fn; // 'this' must be available in 'fn'
-    if (this.fn()){
-      this.callback = callback;
-      return this.callback(); // 'this' must be available in 'callback'
-    }
+    if (fn.call(this))
+      return callback.call(this);
   });
 }
 
