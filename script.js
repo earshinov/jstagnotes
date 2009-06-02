@@ -52,6 +52,21 @@ If this script runs slowly, you may apply the following optiomizations:
 
 /* --- Utils ---------------------------------------------------------------- */
 
+if (!Array.prototype.indexOf)
+  Array.prototype.indexOf = function(x) {
+    var l = this.length;
+    for (var i = 0; i < l; i++)
+      if (this[i] == x)
+        return i;
+    return -1;
+  }
+
+function array_remove(array, element) {
+  for (i in array)
+    if (element == array[i])
+      array.splice(i, 1);
+}
+
 jQuery.fn.exists = function(fn){
   var ret = false;
   $(this).each(function(){
@@ -78,12 +93,6 @@ jQuery.fn.select = function(fn, callback){
       return this.callback(); // 'this' must be available in 'callback'
     }
   });
-}
-
-function array_remove(array, element){
-  for(i in array)
-    if (element == array[i])
-      array.splice(i, 1);
 }
 
 /* --- Cloud ---------------------------------------------------------------- */
