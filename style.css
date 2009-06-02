@@ -66,6 +66,10 @@ body {
   padding-left: 2em;
   padding-right: 2em;
 }
+* html body {
+  height: 100%;
+}
+
 h1 {
   margin: 0;
   padding: 0;
