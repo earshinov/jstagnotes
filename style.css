@@ -1,190 +1,181 @@
-/* --- Оформление стандартных элементов ------------------------------------- */
+/* --- Каркас страницы */
 
-a:link, a:active, a:visited, a:hover {
-  color: #1D60A3;
-}
-
-a[href^='#'] {
-  text-decoration: none;
-  
-  border-bottom: 1px dashed #1D60A3;
-}
-
-/* --- Свои вспомогательные элементы ---------------------------------------- */
-
-.note_tag {
-  color: #4F8F85 !important;
-}
-
-.tag_size_1 {
-  font-size: 140%;
-  color: #588F4F !important;  
-}
-.tag_size_2 {
-  font-size: 100%;
-  color: #4F8F85 !important;
-}
-.tag_size_3 {
-  font-size: 80%;
-  color: DimGray !important;
-}
-
-.chosen_tag {
-  color: Black !important;
-}
-
-/* --- Глобальные настройки. Шрифт и цвета. --------------------------------- */
-
-html {
-  font-size: 90%;
-}
-
-html {
-  background-color: #0E2F4F;
-}
-body {
-  background-color: Snow;
-  color: DimGray;
-}
-
-/* --- Расположение содержимого страницы ------------------------------------ */
-    
 html {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 body {
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-  
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  padding: 0 10px;
   max-width: 720px;
-  
-  padding-left: 2em;
-  padding-right: 2em;
+  min-height: 100%;
+
+    /*
+     * Prevent the bottom margin of the last note
+     * from popping out of the <body>.
+     */
+  padding-bottom: 1px;
 }
 * html body {
   height: 100%;
 }
 
-h1 {
-  margin: 0;
-  padding: 0;
-  
-  padding-top: 0.3em;
+/* --- Оформление страницы */
+
+html {
+  background-color: Snow;
+  color: DimGray;
+  font-size: 100.01%;
+  font-family: sans-serif, Arial;
+}
+body {
+  border-left: 1px solid Gray;
+  border-right: 1px solid Gray;
 }
 
-/* --- Оформление заголовка ------------------------------------------------- */
+/* --- Оформление заголовка  */
 
 h1 {
+    /*
+     * Adjust top padding instead of margin as margin pop out of <body>.
+     * There are other solutions.
+     */
+  margin: 0;
+  padding: 0;
+  margin-bottom: 10px;
+  padding-top: 10px;
+
   font-size: 140%;
-  font-style: normal;
   font-weight: normal;
-  
-  color: #2D94FA;
   text-align: center;
 }
 
-/* --- Оформление функционального блока тэгов ------------------------------- */
+/* --- Оформление тэгов */
 
-#tags_header, #chosen_tags {
-  margin: 0.5em;
+a.note_tag {
+  /* compare with #toggle_tags, ..., #toggle_all_tags */
+  margin: 0 2px;
   padding: 0;
-}
-#popular_tags, #all_tags, #chosen_tags {
-  margin: 0.5em;
-  padding: 0;
-}
-#all_tags .note_tag, #popular_tags .note_tag {
-  margin: 0.5em;
+  
+  color: #4F8F85;
 }
 
-#toggle_tags, #toggle_popular_tags, #toggle_all_tags {
+a.tag_size_1 {
+  font-size: 140%;
+  color: #588F4F;
+}
+a.tag_size_2 {
+  font-size: 100%;
+  color: #4F8F85;
+}
+a.tag_size_3 {
+  font-size: 80%;
   color: DimGray;
 }
 
-.active_link {
-  color: Black !important;
+  /*
+   * If one writes 'a.chosen_tag' instead of 'a.note_tag.chosen_tag',
+   * IE leaves styles from 'a.note_tag' (see above) in notes.
+   */
+a.chosen_tag,
+a.note_tag.chosen_tag {
+  color: Black;
 }
 
-/* --- Оформление блока заметок. Базовые оступы. ---------------------------- */
+/* --- Оформление облака тэгов и фильтра */
 
-.note {
-  margin: 0;
+#cloud, #filter {
+  margin: 10px;
   padding: 0;
-  
-  padding-bottom: 0.7em;
-  width: 100%;
+}
+#toggle_tags,
+#toggle_popular_tags,
+#toggle_all_tags {
+  color: DimGray;
+}
+#toggle_tags.active_link,
+#toggle_popular_tags.active_link,
+#toggle_all_tags.active_link {
+  color: Black;
+}
+#popular_tags,
+#all_tags {
+  margin: 5px;
+  padding: 0;
+}
+#toggle_tags,
+#toggle_popular_tags,
+#toggle_all_tags {
+  /* compare with a.note_tag */
+  margin: 0 2px;
+  padding: 0;
 }
 
-/* --- Оформление внутренностей заметки. Отступы. --------------------------- */
+/* --- Каркас заметок */
 
-.note td {
-  padding: 0.3em;
+div.note {
+  margin: 5px 0;
 }
-
-/* --- Оформление внутренностей заметки. Взаимное расположение элементов ---- */
-
-.note_header {
-  position: relative;
+div.date {
+  float: right;
 }
-.note_date {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-/* --- Оформление внутренностей заметки. Украшательства элементов ----------- */
-
-.note_title {
+div.title {
   text-align: center;
 }
-
-.note_date {
+div.date,
+div.title,
+div.title a {
   color: #2D94FA;
 }
-.note_title, .note_title a:link, .note_title a:active, .note_title a:visited, .note_title a:hover {
-  color: #2D94FA;
+div.header,
+div.content,
+div.tags {
+  padding: 5px 0;
 }
 
-/* --- Оформление элементов, которые могут быть помещены в содержимое заметки */
+/* --- Внутренности заметок */
 
-.note_contents table {  
-  border-collapse: collapse;
+a {
+  color: #1D60A3;
 }
-.note_contents td, .note_contents th {
-  border: 1px Gray Solid;
-}
-.note_contents th {
+
+h2 {
+  font-size: 100%;
   font-weight: normal;
-  
-  color: #0E2F4F;
 }
 
-.note_contents hr {
+hr {
   border-width: 0;
   border-top: 1px Solid Gray;
 }
 
-pre {
-  display: inline;
-  
-  color: #0E2F4F;
+pre,
+span.pre {
+  font-family: monospace, Courier New, Courier;
+  white-space: pre;
 }
 
-h6 {
-  font-size: 100%;
+table {
+  border-collapse: collapse;
+}
+td,
+th {
+  border: 1px Gray Solid;
   font-weight: normal;
-  
-  color: #0E2F4F;
+  padding: 5px;
+}
+
+h2,
+pre,
+span.pre,
+th {
+  color: #333333;
 }
 
 /* --- Некоторые элементы должны изначально быть скрыты! -------------------- */
 
-#all_tags, #chosen_tags {
+#all_tags,
+#filter {
   display: none;
 }
-

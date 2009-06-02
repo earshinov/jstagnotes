@@ -94,7 +94,7 @@ jQuery.fn.select = function(fn, callback){
 /* --- initialization ------------------------------------------------------- */
 
 function init(){
-  $filter = $("#chosen_tags");
+  $filter = $("#filter");
 }
 
 /* --- Cloud ---------------------------------------------------------------- */
@@ -123,7 +123,7 @@ var Cloud = new function(){
     var tagsArray = new Array();
     var notesCountPerTag_max = 1;
 
-    $("table.note:visible a.note_tag").each(function(){
+    $("div.note:visible a.note_tag").each(function(){
       tag = $(this).text();
 
       if (!tags[tag]){
@@ -239,7 +239,7 @@ var Notes = new function(){
 
   this.updateForSelectedTag = function(tag){
 
-     /*
+    /*
      * Collect all notes to hide in single jQuery object.
      *
      * If we hide a note as soon as find it in the loop,
@@ -250,15 +250,14 @@ var Notes = new function(){
      * so it worth looking for a better solution.
      */
     var $hide = $([]);
-    $("table.note:visible").each(function(){
+    $("div.note:visible").each(function(){
       var $this = $(this);
-      if (! $this.find("a.note_tag").existsText(tag)){
+      if (! $this.find("a.note_tag").existsText(tag))
         $hide = $hide.add($this);
-      }
     });
     $hide.hide();
 
-    $("table.note a.note_tag").select(
+    $("div.note a.note_tag").select(
       function(){
         return $(this).text() == tag;
       },
@@ -271,12 +270,12 @@ var Notes = new function(){
   this.updateForDeselectedTag = function(tag){
 
     if (Filter.isEmpty()){
-      $("table.note:visible a.note_tag").removeClass("chosen_tag");
-      $("table.note:hidden").show();
+      $("div.note:visible a.note_tag").removeClass("chosen_tag");
+      $("div.note:hidden").show();
       return;
     }
 
-    $("table.note:hidden").each(function(){
+    $("div.note:hidden").each(function(){
       var $tags = $(this).find("a.note_tag");
       for (var i = 0; i < Filter.tags.length; i++){
         if (! $tags.existsText(Filter.tags[i])){
@@ -286,7 +285,7 @@ var Notes = new function(){
       $(this).show();
     });
 
-    $("table.note a.note_tag").select(
+    $("div.note a.note_tag").select(
       function(){
         return $(this).text() == tag;
       },
@@ -302,7 +301,7 @@ var Notes = new function(){
   */
   this.update = function(){
 
-    $("table.note").each(function(){
+    $("div.note").each(function(){
       var $tags = $(this).find("a.note_tag");
       for (var i = 0; i < Filter.tags.length; i++){
         if (! $tags.existsText(Filter.tags[i])){
@@ -313,7 +312,7 @@ var Notes = new function(){
       $(this).show();
     });
 
-    $("table.note a.note_tag").each(function(){
+    $("div.note a.note_tag").each(function(){
       if (Filter.isTagChosen($(this).text())){
         $(this).addClass("chosen_tag");
       }

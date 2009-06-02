@@ -16,19 +16,19 @@
 <html>
   <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
-    
+
     <title>Заметки</title>
-    
+
     <link rel='shortcut icon' href='favicon.png'/>
-    <link rel='stylesheet' type='text/css' href='style.css'/>     
-    
+    <link rel='stylesheet' type='text/css' href='style.css'/>
+
     <script type='text/javascript' src='jquery.js'></script>
     <script type='text/javascript' src='script.js'></script>
   </head>
   <body>
     <h1>Заметки</h1>
-    
-    <div id='tags_header'>
+
+    <div id='cloud'>
       Метки:
       <a href='' id='toggle_tags'>Скрыть</a>
       <xsl:text> </xsl:text>
@@ -38,8 +38,8 @@
       <div id='popular_tags'/>
       <div id='all_tags'/>
     </div>
-    
-    <div id='chosen_tags'>
+
+    <div id='filter'>
       Фильтр:
     </div>
 
@@ -49,46 +49,32 @@
   </body>
 </html>
 </xsl:template>
-  
-<xsl:template match='n:note'>
-<table class='note'>
-  <tr>
-    <td class='note_header_td'>
-      <div class='note_header'>
-    
-        <xsl:if test='n:date'>
-          <div class='note_date'><xsl:value-of select='n:date'/></div>
-        </xsl:if>
-        
-        <div class='note_title'>
 
-          <xsl:choose>
-            <xsl:when test='n:link'>
-              <a href='{n:link}'><xsl:value-of select='n:title'/></a>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select='n:title'/>
-            </xsl:otherwise>
-          </xsl:choose>
-          
-        </div>        
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td class='note_contents'>
-      <xsl:apply-templates select='n:content/node()'/>
-    </td>
-  </tr>
-  <tr>
-    <td class='note_tags'>
-      <xsl:for-each select='n:tags/n:tag'>
-        <a class='note_tag' href=''><xsl:value-of select='.'/></a>
-        <xsl:text> </xsl:text>
-      </xsl:for-each>
-    </td>
-  </tr>
-</table>
+<xsl:template match='n:note'>
+<div class='note'>
+  <div class='header'>
+    <div class='date'><xsl:value-of select='n:date'/></div>
+    <div class='title'>
+      <xsl:choose>
+        <xsl:when test='n:link'>
+          <a href='{n:link}'><xsl:value-of select='n:title'/></a>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select='n:title'/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </div>
+  </div>
+  <div class='content'>
+    <xsl:apply-templates select='n:content/node()'/>
+  </div>
+  <div class='tags'>
+    <xsl:for-each select='n:tags/n:tag'>
+      <a class='note_tag' href=''><xsl:value-of select='.'/></a>
+      <xsl:text> </xsl:text>
+    </xsl:for-each>
+  </div>
+</div>
 </xsl:template>
 
 <xsl:template match="*">
@@ -99,4 +85,3 @@
 </xsl:template>
 
 </xsl:stylesheet>
-
