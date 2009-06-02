@@ -197,7 +197,7 @@ var Filter = new function(){
   this.addTag = function(tag){
     this.tags.push(tag);
 
-    var $a = $("<a href='' class='chosen_tag'>" + tag + "</a>").appendTo($filter);
+    var $a = $("<a href='' class='note_tag chosen_tag'>" + tag + "</a>").appendTo($filter);
     tag_setClickHandler($a);
 
     $filter.append(" ");
@@ -209,7 +209,7 @@ var Filter = new function(){
 
   this.removeTag = function(tag){
 
-    $filter.find("a.chosen_tag").select(
+    $filter.find("a").select(
       function(){
         return $(this).text() == tag;
       },
@@ -384,5 +384,3 @@ $(document).ready(function(){
     return false;
   });
 });
-
-

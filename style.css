@@ -79,7 +79,6 @@ a.tag_size_3 {
    * If one writes 'a.chosen_tag' instead of 'a.note_tag.chosen_tag',
    * IE leaves styles from 'a.note_tag' (see above) in notes.
    */
-a.chosen_tag,
 a.note_tag.chosen_tag {
   color: Black;
 }
