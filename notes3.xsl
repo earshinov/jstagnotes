@@ -76,7 +76,9 @@
     </td>
   </tr>
   <tr>
-    <td class='note_contents'><xsl:copy-of select='n:content'/></td>
+    <td class='note_contents'>
+      <xsl:apply-templates select='n:content/node()'/>
+    </td>
   </tr>
   <tr>
     <td class='note_tags'>
@@ -87,6 +89,13 @@
     </td>
   </tr>
 </table>
+</xsl:template>
+
+<xsl:template match="*">
+  <xsl:element name="{name()}" namespace="{namespace-uri()}">
+    <xsl:copy-of select="@*"/>
+    <xsl:apply-templates/>
+  </xsl:element>
 </xsl:template>
 
 </xsl:stylesheet>
