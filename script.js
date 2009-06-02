@@ -245,6 +245,7 @@ var Notes = new function(){
   this.updateForDeselectedTag = function(tag){
   
     if (Filter.isEmpty()){
+      $("table.note:visible a.note_tag").removeClass("chosen_tag");
       $("table.note:hidden").show();
       return;
     }
