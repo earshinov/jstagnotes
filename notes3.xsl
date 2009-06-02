@@ -8,8 +8,8 @@
   xmlns:saxon='http://icl.com/saxon'
   extension-element-prefixes='saxon'>
 <xsl:output method='html' encoding='utf-8' indent='no'
-  doctype-public='-//W3C//DTD HTML 4.01//EN'
-  doctype-system='http://www.w3.org/TR/html4/strict.dtd'
+  doctype-public='-//W3C//DTD XHTML 1.0 Strict//EN'
+  doctype-system='http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'
   saxon:character-representation='native;decimal'/>
 
 <xsl:template match='n:notes'>
