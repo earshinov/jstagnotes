@@ -26,7 +26,7 @@ a[href^='#'] {
 }
 .tag_size_3 {
   font-size: 80%;
-  color: DimGrey !important;
+  color: DimGray !important;
 }
 
 .chosen_tag {
@@ -44,7 +44,7 @@ html {
 }
 body {
   background-color: Snow;
-  color: DimGrey;
+  color: DimGray;
 }
 
 /* --- Расположение содержимого страницы ------------------------------------ */
@@ -103,7 +103,7 @@ h1 {
 }
 
 #toggle_tags, #toggle_popular_tags, #toggle_all_tags {
-  color: DimGrey;
+  color: DimGray;
 }
 
 .active_link {
@@ -156,7 +156,7 @@ h1 {
   border-collapse: collapse;
 }
 .note_contents td, .note_contents th {
-  border: 1px Grey Solid;
+  border: 1px Gray Solid;
 }
 .note_contents th {
   font-weight: normal;
@@ -166,7 +166,7 @@ h1 {
 
 .note_contents hr {
   border-width: 0;
-  border-top: 1px Solid Grey;
+  border-top: 1px Solid Gray;
 }
 
 pre {
