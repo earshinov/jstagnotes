@@ -239,11 +239,24 @@ var Notes = new function(){
 
   this.updateForSelectedTag = function(tag){
 
+     /*
+     * Collect all notes to hide in single jQuery object.
+     *
+     * If we hide a note as soon as find it in the loop,
+     * Opera browser tries to update page to reflect DOM changes
+     * everytime (and does this sloooooow).
+     *
+     * On the other side, this collecting slows down other browsers,
+     * so it worth looking for a better solution.
+     */
+    var $hide = $([]);
     $("table.note:visible").each(function(){
-      if (! $(this).find("a.note_tag").existsText(tag)){
-        $(this).hide();
+      var $this = $(this);
+      if (! $this.find("a.note_tag").existsText(tag)){
+        $hide = $hide.add($this);
       }
     });
+    $hide.hide();
 
     $("table.note a.note_tag").select(
       function(){
