@@ -62,7 +62,7 @@ if (!Array.prototype.indexOf)
   }
 
 function array_remove(array, element) {
-  for (i in array)
+  for (var i = 0; i < array.length; i++)
     if (element == array[i])
       array.splice(i, 1);
 }
@@ -161,7 +161,7 @@ var Cloud = new function(){
     }
 
     var notesCountPerTag_range = notesCountPerTag_max - notesCountPerTag_min + 1;
-    for (index in tagsArray) {
+    for (var index=0; index < tagsArray.length; index++) {
       var tag = tagsArray[index];
 
       if (Filter.isTagChosen(tag))
