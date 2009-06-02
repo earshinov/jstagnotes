@@ -46,7 +46,7 @@
     <n:title>Руководство по GNU Emacs </n:title>
     <n:date>11.04.2007</n:date>
     <n:link>http://www.Linux.org.ru/books/GNU/emacs/emacs_toc.html</n:link>
-    <n:content>Руководство по GNU Emacs на русском языке</n:content>
+    <n:content>Руководство по <strong>GNU Emacs</strong> на русском языке</n:content>
     <n:tags>
       <n:tag>emacs</n:tag>
     </n:tags>
