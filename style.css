@@ -32,7 +32,7 @@ body {
 /* --- Page decoration */
 
 html {
-  background-color: Snow;
+  background-color: White;
   color: DimGray;
   font-size: 100.01%;
   font-family: sans-serif, Arial;
@@ -65,7 +65,7 @@ a.note_tag {
   /* compare with #toggle_tags, ..., #toggle_all_tags */
   margin: 0 2px;
   padding: 0;
-  
+
   color: #4F8F85;
 }
 
