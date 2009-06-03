@@ -162,6 +162,24 @@ span.pre {
   font-family: monospace, Courier New, Courier;
   white-space: pre;
 }
+pre {
+  width: 715px;
+  max-height: 500px;
+  overflow: auto;
+
+  border: 1px Solid Gray;
+  padding: 1px;
+}
+* html pre {
+  height: expression((this.scrollHeight > 500) ? "500px" : "auto");
+
+  /*
+   * add padding to make room for the scroll bar
+   * http://dave.srednal.com/archives/31
+   * default scroll bar size in Windows is 16px
+   */
+  padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "17px" : "1px");
+}
 
 table {
   border-collapse: collapse;
