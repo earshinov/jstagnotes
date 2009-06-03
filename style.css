@@ -32,7 +32,7 @@ body {
 /* --- Page decoration */
 
 html {
-  background-color: Snow;
+  background-color: White;
   color: DimGray;
   font-size: 100.01%;
   font-family: sans-serif, Arial;
@@ -65,7 +65,7 @@ a.note_tag {
   /* compare with #toggle_tags, ..., #toggle_all_tags */
   margin: 0 2px;
   padding: 0;
-  
+
   color: #4F8F85;
 }
 
@@ -162,13 +162,31 @@ span.pre {
   font-family: monospace, Courier New, Courier;
   white-space: pre;
 }
+pre {
+  width: 715px;
+  max-height: 500px;
+  overflow: auto;
+
+  border: 1px Solid Gray;
+  padding: 1px;
+}
+* html pre {
+  height: expression((this.scrollHeight > 500) ? "500px" : "auto");
+
+  /*
+   * add padding to make room for the scroll bar
+   * http://dave.srednal.com/archives/31
+   * default scroll bar size in Windows is 16px
+   */
+  padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "17px" : "1px");
+}
 
 table {
   border-collapse: collapse;
 }
 td,
 th {
-  border: 1px Gray Solid;
+  border: 1px Solid Gray;
   font-weight: normal;
   padding: 5px;
 }
