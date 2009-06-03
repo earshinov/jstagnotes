@@ -1,3 +1,10 @@
+/*
+ * HTML markup within note contents may look incosistenly.
+ * Following elements are guaranteed to work right:Внутри заметки не все HTML-элементы могут выглядеть красиво.
+ * tables, <hr>, <h2>, <pre>, <span class='pre'>,
+ * and some simple elements like <scrong> etc.
+ */
+
 /* --- Page frame  */
 
 html {
