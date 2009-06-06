@@ -112,6 +112,32 @@ a.note_tag.chosen_tag {
 #all_tags {
   margin: 5px;
   padding: 0;
+
+    /*
+     * It's worth increasing line-height here so that consequent lines
+     * within the tag cloud containing only the smallest (not popular) tags
+     * be more readable.
+     *
+     * But IE6 do not increase the line-height given if a large (popular)
+     * tag occurs in a line, and those large tags almost overlap the
+     * line before the line where they resist.
+     *
+     * I googled it, but always get something like
+     * http://www.positioniseverything.net/explorer/lineheightbug.html
+     * (Internet Explorer 6: Line-height / Replaced Element Bug),
+     * not the bug I have here... Fuck IE.
+     */
+
+    /*
+     * The bad side of this justify alignment is that spaces within tags
+     * are enlarged too, and that looks not very good. No CSS hack helps.
+     *
+     * Maybe a solution is to replace ordinary spaces there with non-breakable
+     * ones, but even if it is, I wouldn't use it because both entering
+     * non-breakable spaces within tags in source and translating them
+     * dynamically with JavaScript is ugly.
+     */
+  text-align: justify;
 }
 #toggle_tags,
 #toggle_popular_tags,
