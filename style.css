@@ -1,7 +1,7 @@
 /*
  * HTML markup within note contents may look incosistenly.
- * Following elements are guaranteed to work right:Внутри заметки не все HTML-элементы могут выглядеть красиво.
- * tables, <hr>, <h2>, <pre>, <span class='pre'>,
+ * Following elements are guaranteed to work right:
+ * tables, lists, blockquotes, <hr>, <h2>, <pre>, <span class='pre'>,
  * and some simple elements like <scrong> etc.
  */
 
@@ -148,6 +148,26 @@ div.tags {
 
 a {
   color: #1D60A3;
+}
+
+blockquote {
+  margin-left: 20px;
+  border-left: 1px Solid Gray;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+ol, ul {
+  margin-left: 31px;
+  padding-left: 0;
+}
+li {
+  margin: 0;
+  padding: 0;
+}
+dd, li {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 h2 {
