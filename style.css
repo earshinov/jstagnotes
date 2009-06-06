@@ -63,10 +63,12 @@ h1 {
 
 a.note_tag {
   /* compare with #toggle_tags, ..., #toggle_all_tags */
-  margin: 0 2px;
+  margin: 0;
   padding: 0;
+  margin-right: 2px;
 
   color: #4F8F85;
+  white-space: nowrap;
 }
 
 a.tag_size_1 {
@@ -115,8 +117,9 @@ a.note_tag.chosen_tag {
 #toggle_popular_tags,
 #toggle_all_tags {
   /* compare with a.note_tag */
-  margin: 0 2px;
+  margin: 0;
   padding: 0;
+  margin-right: 2px;
 }
 
 /* --- Note frame */
