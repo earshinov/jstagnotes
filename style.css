@@ -5,7 +5,25 @@
  * and some simple elements like <scrong> etc.
  */
 
+/*
+ * Warning: if a notes file is big enough (like mine, containing ~500 notes),
+ * markup begin to flow in IE. Particularly, the space between the left side
+ * of a note and the left body border begins to gradually change from the
+ * beginning to the end of file. I think this is due to some internal IE bugs.
+ *
+ * Or maybe IE discovered some HTML markup it could not render, and
+ * markup began to flow... I don't know, but anyway, it looks to be extremely
+ * hard to debug and I won't do it.
+ */
+
 /* --- Page frame  */
+
+  /*
+   * This markup has a disadvantage. If the page contains large elements
+   * like images or tables, they can pop out of the right body border
+   * if browser window is so small that the elements' size can't be
+   * reduced accordingly.
+   */
 
 html {
   height: 100%;
