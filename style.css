@@ -186,7 +186,7 @@ span.pre {
   white-space: pre;
 }
 pre {
-  width: 715px;
+  max-width: 715px;
   max-height: 500px;
   overflow: auto;
 
@@ -194,6 +194,18 @@ pre {
   padding: 1px;
 }
 * html pre {
+  /*
+   * Use fixed width.
+   * Otherwise oveflow: auto does not work.
+   * Learn fucking IE, dude!
+   *
+   * If user makes his browser's window too small,
+   * preformatted blocks will surprise him.
+   * It's his fault anyway that he uses IE6.
+   *
+   * width: expression(this.width > 715 ? "715px" : this.width);
+   */
+  width: 715px;
   height: expression((this.scrollHeight > 500) ? "500px" : "auto");
 
   /*
