@@ -1,11 +1,29 @@
 /*
  * HTML markup within note contents may look incosistenly.
- * Following elements are guaranteed to work right:Внутри заметки не все HTML-элементы могут выглядеть красиво.
- * tables, <hr>, <h2>, <pre>, <span class='pre'>,
+ * Following elements are guaranteed to work right:
+ * tables, lists, blockquotes, <hr>, <h2>, <pre>, <span class='pre'>,
  * and some simple elements like <scrong> etc.
  */
 
+/*
+ * Warning: if a notes file is big enough (like mine, containing ~500 notes),
+ * markup begin to flow in IE. Particularly, the space between the left side
+ * of a note and the left body border begins to gradually change from the
+ * beginning to the end of file. I think this is due to some internal IE bugs.
+ *
+ * Or maybe IE discovered some HTML markup it could not render, and
+ * markup began to flow... I don't know, but anyway, it looks to be extremely
+ * hard to debug and I won't do it.
+ */
+
 /* --- Page frame  */
+
+  /*
+   * This markup has a disadvantage. If the page contains large elements
+   * like images or tables, they can pop out of the right body border
+   * if browser window is so small that the elements' size can't be
+   * reduced accordingly.
+   */
 
 html {
   height: 100%;
@@ -63,10 +81,12 @@ h1 {
 
 a.note_tag {
   /* compare with #toggle_tags, ..., #toggle_all_tags */
-  margin: 0 2px;
+  margin: 0;
   padding: 0;
+  margin-right: 2px;
 
   color: #4F8F85;
+  white-space: nowrap;
 }
 
 a.tag_size_1 {
@@ -110,13 +130,40 @@ a.note_tag.chosen_tag {
 #all_tags {
   margin: 5px;
   padding: 0;
+
+    /*
+     * It's worth increasing line-height here so that consequent lines
+     * within the tag cloud containing only the smallest (not popular) tags
+     * be more readable.
+     *
+     * But IE6 do not increase the line-height given if a large (popular)
+     * tag occurs in a line, and those large tags almost overlap the
+     * line before the line where they resist.
+     *
+     * I googled it, but always get something like
+     * http://www.positioniseverything.net/explorer/lineheightbug.html
+     * (Internet Explorer 6: Line-height / Replaced Element Bug),
+     * not the bug I have here... Fuck IE.
+     */
+
+    /*
+     * The bad side of this justify alignment is that spaces within tags
+     * are enlarged too, and that looks not very good. No CSS hack helps.
+     *
+     * Maybe a solution is to replace ordinary spaces there with non-breakable
+     * ones, but even if it is, I wouldn't use it because both entering
+     * non-breakable spaces within tags in source and translating them
+     * dynamically with JavaScript is ugly.
+     */
+  text-align: justify;
 }
 #toggle_tags,
 #toggle_popular_tags,
 #toggle_all_tags {
   /* compare with a.note_tag */
-  margin: 0 2px;
+  margin: 0;
   padding: 0;
+  margin-right: 2px;
 }
 
 /* --- Note frame */
@@ -147,6 +194,26 @@ a {
   color: #1D60A3;
 }
 
+blockquote {
+  margin-left: 20px;
+  border-left: 1px Solid Gray;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+ol, ul {
+  margin-left: 31px;
+  padding-left: 0;
+}
+li {
+  margin: 0;
+  padding: 0;
+}
+dd, li {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 h2 {
   font-size: 100%;
   font-weight: normal;
@@ -163,7 +230,7 @@ span.pre {
   white-space: pre;
 }
 pre {
-  width: 715px;
+  max-width: 715px;
   max-height: 500px;
   overflow: auto;
 
@@ -171,6 +238,18 @@ pre {
   padding: 1px;
 }
 * html pre {
+  /*
+   * Use fixed width.
+   * Otherwise oveflow: auto does not work.
+   * Learn fucking IE, dude!
+   *
+   * If user makes his browser's window too small,
+   * preformatted blocks will surprise him.
+   * It's his fault anyway that he uses IE6.
+   *
+   * width: expression(this.width > 715 ? "715px" : this.width);
+   */
+  width: 715px;
   height: expression((this.scrollHeight > 500) ? "500px" : "auto");
 
   /*
