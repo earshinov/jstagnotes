@@ -180,12 +180,22 @@ div.title {
 div.date,
 div.title,
 div.title a {
-  color: #2D94FA;
+  /*
+   * Or, if you don't like red:
+   *
+   * color: #2D94FA;
+   */
+  color: FireBrick;
 }
-div.header,
-div.content,
+
+  /* compare with p */
+div.header {
+  padding-top: 5px;
+  margin-bottom: 10px;
+}
 div.tags {
-  padding: 5px 0;
+  margin-top: 10px;
+  padding-bottom: 5px;
 }
 
 /* --- Note content decoration */
@@ -222,6 +232,11 @@ h2 {
 hr {
   border-width: 0;
   border-top: 1px Solid Gray;
+}
+
+p {
+  /* compare with div.header and div.tags */
+  margin: 10px 0;
 }
 
 pre,
