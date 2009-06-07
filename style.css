@@ -180,7 +180,12 @@ div.title {
 div.date,
 div.title,
 div.title a {
-  color: #2D94FA;
+  /*
+   * Or, if you don't like red:
+   *
+   * color: #2D94FA;
+   */
+  color: FireBrick;
 }
 div.header,
 div.content,
