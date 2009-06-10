@@ -1,8 +1,8 @@
 /*
  * HTML markup within note contents may look incosistenly.
  * Following elements are guaranteed to work right:
- * tables, lists, blockquotes, <hr>, <h2>, <pre>, <span class='pre'>,
- * and some simple elements like <scrong> etc.
+ * <h2>-<h4>, lists, tables, <pre> and <code>, cites and blockquotes, <hr>,
+ * and some simple elements like <strong> etc.
  */
 
 /*
@@ -249,8 +249,7 @@ p {
   margin: 10px 0;
 }
 
-pre,
-span.pre {
+pre, code {
   font-family: monospace, Courier New, Courier;
   white-space: pre;
 }
@@ -296,8 +295,7 @@ th {
 }
 
 h2, h3, h4,
-pre,
-span.pre,
+pre, code,
 th {
   color: #333333;
 }

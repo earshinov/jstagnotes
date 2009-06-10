@@ -12,7 +12,7 @@
     <n:content>
       <h2>Заголовок h2</h2>
       <p>Горизонтальную черту проводим, используя
-      <span class='pre'>&lt;hr noshade='noshade'/&gt;</span>.</p>
+      <code>&lt;hr noshade='noshade'/&gt;</code>.</p>
       <hr noshade='noshade'/>
       <p>Продолжение: <a href='http://github.com/earshinov/jstagnotes/'>ссылка в тексте</a> и
       <b>кусок жирного текста</b></p>
@@ -27,7 +27,7 @@
     <n:date>02.06.2009</n:date>
     <n:content>
       <p>Можно использовать моноширинный текст прямо посреди строки, используя
-      <span class='pre'>&lt;span class='pre'&gt;</span>. Другой вариант - блок
+      тэг <code>&lt;code&gt;</code>. Другой вариант - блок
       форматированного текста. Пример:</p>
       <pre>this.updateForDeselectedTag = function(tag){
 
