@@ -78,11 +78,9 @@ jQuery.fn.select = function(fn, callback){
   });
 }
 
-/* --- initialization ------------------------------------------------------- */
+/* --- Globals -------------------------------------------------------------- */
 
-function init(){
-  $filter = $("#filter");
-}
+var $filter = null;
 
 /* --- Cloud ---------------------------------------------------------------- */
 
@@ -219,7 +217,15 @@ var Filter = new function(){
 
 var Notes = new function(){
 
+  var $shownNotes = $([]);
+
+  function updateCommon(){
+    $shownNotes.hide().removeClass("selected");
+    $shownNotes = $([]);
+  }
+
   this.updateForSelectedTag = function(tag){
+    updateCommon();
 
     /*
      * Collect all notes to hide in single jQuery object.
@@ -250,6 +256,7 @@ var Notes = new function(){
   }
 
   this.updateForDeselectedTag = function(tag){
+    updateCommon();
 
     if (Filter.isEmpty()){
       $("div.note:visible a.note_tag").removeClass("chosen_tag");
@@ -278,9 +285,9 @@ var Notes = new function(){
   }
 
   /*
-    This method is not actually used. It is just a template for
-    updateForSelectedTag() and updateForDeselectedTag().
-  */
+   * This method is not actually used. It is just a template for
+   * updateForSelectedTag() and updateForDeselectedTag().
+   */
   this.update = function(){
 
     $("div.note").each(function(){
@@ -304,14 +311,38 @@ var Notes = new function(){
     });
   }
 
+  /*
+   * Force a note to be shown.
+   *
+   * Function will do nothing if the note is visible. Otherwise it will
+   * show the note and add "selected" CSS class to it.
+   *
+   * The note will be hidden again when a user changes the set of selected tags
+   * (i.e., if he selects or deselects a tag) and the "selected" CSS class will
+   * be removed.
+   */
+  this.showNote = function($note){
+    if ($note.is(":hidden")){
+      $shownNotes = $shownNotes.add($note);
+      $note.addClass("selected").show();
+    }
+  }
+
 }();
 
 /* --- Startup -------------------------------------------------------------- */
 
 $(document).ready(function(){
 
-  init();
+  $("#toggle_popular_tags").addClass("active_link");
+  $("#all_tags, #filter").hide();
+
+  /* ----- */
+
+  $filter = $("#filter");
   Cloud.recalculate();
+
+  /* ----- */
 
   $("a.note_tag").live("click", function(){
     var $this = $(this);
@@ -321,6 +352,8 @@ $(document).ready(function(){
       Filter.addTag($this.text());
     return false;
   });
+
+  /* ----- */
 
   $("#toggle_tags").click(function(){
     if (!$(this).hasClass("active_link")){
@@ -359,6 +392,19 @@ $(document).ready(function(){
       $("#all_tags").show();
     }
     return false;
+  });
+
+  /* ----- */
+
+  $("a[href^=#][href!=#]").each(function(){
+    var $this = $(this);
+    var $note = $($this.attr("href"));
+    if ($note.is("div.note")){
+      $this.click(function(){
+        Notes.showNote($note);
+        /* propagade the event further so that we actually follow the link */
+      });
+    }
   });
 });
 

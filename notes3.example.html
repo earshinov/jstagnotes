@@ -15,22 +15,49 @@
 <body>
   <h1>Заметки</h1>
 
-  <div id="cloud">
-    Метки: <a href="" id="toggle_tags" name="toggle_tags">Скрыть</a> <a href=""
-    id="toggle_popular_tags" class="active_link" name=
-    "toggle_popular_tags">Популярные</a> <a href="" id="toggle_all_tags" name=
-    "toggle_all_tags">Все</a>
+  <div id="control">
+    <div id="cloud">
+      Метки:
+      <a href="#" id="toggle_tags" class="js_link" >Скрыть</a>
+      <a href="#" id="toggle_popular_tags" class="js_link">Популярные</a>
+      <a href="#" id="toggle_all_tags" class="js_link">Все</a>
 
-    <div id="popular_tags"></div>
+      <div id="popular_tags"></div>
+      <div id="all_tags"></div>
+    </div>
 
-    <div id="all_tags"></div>
-  </div>
-
-  <div id="filter">
-    Фильтр:
+    <div id="filter">
+      Фильтр:
+    </div>
   </div>
 
   <div id="notes">
+
+    <div class="note">
+      <div class="header">
+        <div class="date">02.06.2009</div>
+        <div class="title">Link</div>
+      </div>
+      <div class="content">
+        <p>Пример ссылки на другую заметку: <a href="#link_target">Link target</a>.</p>
+      </div>
+      <div class="tags">
+        <a class="note_tag" href="">демонстрация</a>
+        <a class="note_tag" href="">ссылка</a>
+      </div>
+    </div>
+
+    <div class="note" id="link_target">
+      <div class="header">
+        <div class="date">02.06.2009</div>
+        <div class="title">Link target</div>
+      </div>
+      <div class="content">
+        Просто заметка, на которую ссылается другая.
+      </div>
+      <!--<div class="tags"></div>-->
+    </div>
+
     <div class="note">
       <div class="header">
         <div class="date">
@@ -56,6 +83,7 @@
 
       <div class="tags">
         <a class="note_tag" href="">демонстрация</a>
+        <a class="note_tag" href="">ссылка</a>
       </div>
     </div>
 

@@ -16,6 +16,33 @@
  * hard to debug and I won't do it.
  */
 
+/*
+ * --- Used colors ---
+ *
+ * Background:
+ *   White
+ *
+ * Borders and other lines:
+ *   Gainsboro - border color for page frame etc.
+ *   Gray - a) distinct color for page frame etc.
+ *          b) color of tables, <hr>'s and other elements within note contents
+ *
+ * Text:
+ *   DimGray - ordinary text color
+ *
+ * Links:
+ *   #1D60A3 - ordinary link color
+ *
+ * Tags:
+ *   (1) #4F8F85 - ordinary tag color
+ *   (2) #588F4F - color for a popular tag in the tag cloud, more intensive than (1)
+ *   (3) DimGray - color for a tag in the tag cloud that is not popular, more grayish than (1)
+ *
+ * Special colors:
+ *   #333333 - color for distinct text, particularly headers, preformatted blocks, some links etc.
+ *   FireBrick - distinct color for note titles etc. (alternative: #2D94FA)
+ */
+
 /* --- Page frame  */
 
   /*
@@ -56,11 +83,9 @@ html {
   font-family: sans-serif, Arial;
 }
 body {
-  border-left: 1px solid Gray;
-  border-right: 1px solid Gray;
+  border-left: 1px solid Gainsboro;
+  border-right: 1px solid Gainsboro;
 }
-
-/* --- Header decoration */
 
 h1 {
     /*
@@ -75,6 +100,40 @@ h1 {
   font-size: 1.5em;
   font-weight: normal;
   text-align: center;
+}
+
+/* --- Other elements --- */
+
+a {
+  color: #1D60A3;
+}
+
+/*
+ * Internal links between notes.
+ * This does not work in IE... so IE users will do without it.
+ */
+a[href^='#'] {
+  text-decoration: none;
+  border-bottom: 1px dashed #1D60A3;
+}
+
+/*
+ * Links handled with JavaScript.
+ * Do not use attribute selectors here as this should work in IE.
+ */
+a.js_link {
+
+  /*
+   * Reset styles from a[href^='#'] as links handled
+   * with JavaScript usually have href='#'.
+   */
+  text-decoration: underline;
+  border-width: 0;
+
+  color: DimGray;
+}
+a.js_link.active_link {
+  color: #333333;
 }
 
 /* --- Tags decoration */
@@ -107,25 +166,17 @@ a.tag_size_3 {
    * IE leaves styles from 'a.note_tag' (see above) in notes.
    */
 a.note_tag.chosen_tag {
-  color: Black;
+  color: #333333;
 }
 
 /* --- Tag cloud and filter decoration */
 
-#cloud, #filter {
-  margin: 10px;
-  padding: 0;
+#control {
+  margin-bottom: 20px; /* margin-top is not needed as margin-bottom for <h1> is set */
+  border: 1px Solid FireBrick;
+  padding: 10px;
 }
-#toggle_tags,
-#toggle_popular_tags,
-#toggle_all_tags {
-  color: DimGray;
-}
-#toggle_tags.active_link,
-#toggle_popular_tags.active_link,
-#toggle_all_tags.active_link {
-  color: Black;
-}
+
 #popular_tags,
 #all_tags {
   margin: 5px;
@@ -169,8 +220,23 @@ a.note_tag.chosen_tag {
 /* --- Note frame */
 
 div.note {
-  margin: 5px 0;
+  margin: 10px 0;
+  border: 1px Solid Gainsboro;
+  padding: 10px;
 }
+div.note.selected {
+  /*
+   * I use a custom class instead of :target as I want to emphasize *all*
+   * notes forced to be shown by clicking a link, not just the last such note.
+   *
+   * I do not style :target at all as there is no way to deselect a note
+   * except cutting of the hash part of the URL manually. Most of ordinary
+   * users are not ready to do this, so a selected note will hang around
+   * bothering them...
+   */
+  border: 1px Dotted Gray;
+}
+
 div.date {
   float: right;
 }
@@ -180,29 +246,18 @@ div.title {
 div.date,
 div.title,
 div.title a {
-  /*
-   * Or, if you don't like red:
-   *
-   * color: #2D94FA;
-   */
   color: FireBrick;
 }
 
   /* compare with p */
 div.header {
-  padding-top: 5px;
   margin-bottom: 10px;
 }
 div.tags {
   margin-top: 10px;
-  padding-bottom: 5px;
 }
 
 /* --- Note content decoration */
-
-a {
-  color: #1D60A3;
-}
 
 blockquote {
   margin-left: 20px;
@@ -254,7 +309,7 @@ pre, code {
   white-space: pre;
 }
 pre {
-  max-width: 715px;
+  max-width: 696px;
   max-height: 500px;
   overflow: auto;
 
@@ -271,9 +326,9 @@ pre {
    * preformatted blocks will surprise him.
    * It's his fault anyway that he uses IE6.
    *
-   * width: expression(this.width > 715 ? "715px" : this.width);
+   * width: expression(this.width > 694 ? "694px" : this.width);
    */
-  width: 715px;
+  width: 694px;
   height: expression((this.scrollHeight > 500) ? "500px" : "auto");
 
   /*
@@ -298,11 +353,4 @@ h2, h3, h4,
 pre, code,
 th {
   color: #333333;
-}
-
-/* --- Some elements must be initially hidden */
-
-#all_tags,
-#filter {
-  display: none;
 }
