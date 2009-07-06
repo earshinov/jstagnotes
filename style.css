@@ -116,20 +116,20 @@ a[href^='#'] {
   text-decoration: none;
   border-bottom: 1px dashed #1D60A3;
 }
+a[href='#'] {
+  /*
+   * Reset styles from a[href^='#'] as links handled
+   * with JavaScript usually have href='#'.
+   */
+  text-decoration: underline;
+  border-bottom-width: 0;
+}
 
 /*
  * Links handled with JavaScript.
  * Do not use attribute selectors here as this should work in IE.
  */
 a.js_link {
-
-  /*
-   * Reset styles from a[href^='#'] as links handled
-   * with JavaScript usually have href='#'.
-   */
-  text-decoration: underline;
-  border-width: 0;
-
   color: DimGray;
 }
 a.js_link.active_link {
