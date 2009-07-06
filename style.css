@@ -25,26 +25,33 @@
    * reduced accordingly.
    */
 
-html {
-  height: 100%;
+html, body {
   margin: 0;
   padding: 0;
 }
-body {
-  margin: 0 auto;
-  padding: 0 10px;
-  max-width: 720px;
-  min-height: 100%;
 
-    /*
-     * Prevent the bottom margin of the last note
-     * from popping out of the <body>.
-     */
-  padding-bottom: 1px;
-}
-* html body {
-  width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
-  height: 100%;
+@media screen {
+  html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    margin: 0 auto;
+    padding: 0 10px;
+    max-width: 720px;
+    min-height: 100%;
+
+      /*
+       * Prevent the bottom margin of the last note
+       * from popping out of the <body>.
+       */
+    padding-bottom: 1px;
+  }
+  * html body {
+    width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
+    height: 100%;
+  }
 }
 
 /* --- Page decoration */
@@ -55,9 +62,12 @@ html {
   font-size: 100.01%;
   font-family: sans-serif, Arial;
 }
-body {
-  border-left: 1px solid Gray;
-  border-right: 1px solid Gray;
+
+@media screen {
+  body {
+    border-left: 1px solid Gray;
+    border-right: 1px solid Gray;
+  }
 }
 
 /* --- Header decoration */
@@ -254,34 +264,43 @@ pre, code {
   white-space: pre;
 }
 pre {
-  max-width: 715px;
-  max-height: 500px;
-  overflow: auto;
-
   border: 1px Solid Gray;
   padding: 1px;
 }
-* html pre {
-  /*
-   * Use fixed width.
-   * Otherwise oveflow: auto does not work.
-   * Learn fucking IE, dude!
-   *
-   * If user makes his browser's window too small,
-   * preformatted blocks will surprise him.
-   * It's his fault anyway that he uses IE6.
-   *
-   * width: expression(this.width > 715 ? "715px" : this.width);
-   */
-  width: 715px;
-  height: expression((this.scrollHeight > 500) ? "500px" : "auto");
+@media screen {
+  pre {
+    max-width: 715px;
+    max-height: 500px;
+    overflow: auto;
+  }
+  * html pre {
+    /*
+     * Use fixed width.
+     * Otherwise oveflow: auto does not work.
+     * Learn fucking IE, dude!
+     *
+     * If user makes his browser's window too small,
+     * preformatted blocks will surprise him.
+     * It's his fault anyway that he uses IE6.
+     *
+     * width: expression(this.width > 715 ? "715px" : this.width);
+     */
+    width: 715px;
+    height: expression((this.scrollHeight > 500) ? "500px" : "auto");
 
-  /*
-   * add padding to make room for the scroll bar
-   * http://dave.srednal.com/archives/31
-   * default scroll bar size in Windows is 16px
-   */
-  padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "17px" : "1px");
+    /*
+     * add padding to make room for the scroll bar
+     * http://dave.srednal.com/archives/31
+     * default scroll bar size in Windows is 16px
+     */
+    padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "17px" : "1px");
+  }
+}
+@media print {
+  pre {
+    max-height: auto;
+    height: auto;
+  }
 }
 
 table {
