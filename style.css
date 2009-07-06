@@ -270,13 +270,10 @@ pre {
 @media screen {
   pre {
     max-width: 715px;
-    max-height: 500px;
-    overflow: auto;
-  }
-  * html pre {
+
     /*
-     * Use fixed width.
-     * Otherwise oveflow: auto does not work.
+     * For IE use fixed width.
+     * Otherwise "oveflow: auto" (see below) does not work.
      * Learn fucking IE, dude!
      *
      * If user makes his browser's window too small,
@@ -285,21 +282,22 @@ pre {
      *
      * width: expression(this.width > 715 ? "715px" : this.width);
      */
-    width: 715px;
-    height: expression((this.scrollHeight > 500) ? "500px" : "auto");
+    *width: 715px;
+  }
+}
+@media screen, handheld {
+  pre {
+    max-height: 500px;
+    overflow: auto;
+
+    *height: expression((this.scrollHeight > 500) ? "500px" : "auto");
 
     /*
      * add padding to make room for the scroll bar
      * http://dave.srednal.com/archives/31
      * default scroll bar size in Windows is 16px
      */
-    padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "17px" : "1px");
-  }
-}
-@media print {
-  pre {
-    max-height: auto;
-    height: auto;
+    *padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "17px" : "1px");
   }
 }
 
