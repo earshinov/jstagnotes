@@ -151,6 +151,19 @@ a.js_link.active_link {
   color: #333333;
 }
 
+/*
+ * Pretty printing of links.
+ * See script.js for more details.
+ */
+@media print {
+  html.prettyprint a:after {
+    content: " (" attr(href) ")";
+  }
+  html.prettyprint a[href='#']:after {
+    content: "";
+  }
+}
+
 /* --- Tags decoration */
 
 a.note_tag {

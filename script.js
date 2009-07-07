@@ -88,7 +88,7 @@ var Cloud = new function(){
 
   this.addTag = function(tag, size){
     var $allTags = $("#all_tags").append(" ");
-    var $a = $("<a href='' class='note_tag tag_size_" + size + "'>" + tag + "</a>").appendTo($allTags);
+    var $a = $("<a href='#' class='note_tag tag_size_" + size + "'>" + tag + "</a>").appendTo($allTags);
 
     if (size < 3){
       var $popularTags = $("#popular_tags").append(" ");
@@ -180,7 +180,7 @@ var Filter = new function(){
   this.addTag = function(tag){
     this.tags.push(tag);
 
-    $filter.append("<a href='' class='note_tag chosen_tag'>" + tag + "</a> ");
+    $filter.append("<a href='#' class='note_tag chosen_tag'>" + tag + "</a> ");
     $filter.show();
 
     Notes.updateForSelectedTag(tag);
@@ -406,6 +406,55 @@ $(document).ready(function(){
       });
     }
   });
+
+  /* ----- */
+
+  /*
+   * Pretty printing of links.
+   * http://beckelman.net/post/2009/02/16/Use-jQuery-to-Show-a-Linke28099s-Address-After-its-Text-When-Printing-In-IE6-and-IE7.aspx
+   */
+
+  //Check to see if browser supports onbeforeprint (IE6, IE7 and IE8)
+  if (window.onbeforeprint !== undefined) {
+
+    /*
+     * Selector "a:not([href$=#])" is used below as a more straightforward
+     * one "a[href!=#]" does not work for IE.
+     *
+     * Speaking precisely, it does not work for links that are placed
+     * dynamically to, for example, the tag cloud. Setting "href" attribute
+     * and retrieving it gives us "http://full/page#" instead of plain "#" in,
+     * IE, so we can't just check for equality to "#".
+     */
+
+    //Since the browser is IE, add event to append link text before print
+    window.onbeforeprint = function(){
+      $("a:not([href$=#])").each(function(){
+
+          //Store the link's original text in the jQuery data store
+          $(this).data("linkText", $(this).text());
+
+          //Append the link to the current text
+          $(this).append(" (" + $(this).attr("href") + ")");
+      });
+    }
+
+    //Remove the link text since the document has gone to the printer
+    window.onafterprint = function(){
+      $("a:not([href$=#])").each(function(){
+
+          //Restore the links text to the original value by pulling it out of the jQuery data store
+          $(this).text($(this).data("linkText"));
+      });
+    }
+  }
+  else {
+      /*
+       * The browser is not IE, so we consider CSS :after pseudo element to be
+       * supported and activate appropriate styles (see style.css).
+       */
+      $('html').addClass('prettyprint');
+  }
 });
 
 
