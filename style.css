@@ -38,6 +38,11 @@
  * Links:
  *   #1D60A3 - ordinary link color
  *
+ * Headers within note contents:
+ *   Black - <h4>
+ *   #8c1b1b - <h3>
+ *   FireBrick - <h2>
+ *
  * Tags:
  *   (1) #4F8F85 - ordinary tag color
  *   (2) #588F4F - color for a popular tag in the tag cloud, more intensive than (1)
@@ -46,6 +51,12 @@
  * Special colors:
  *   #333333 - color for distinct text, particularly headers, preformatted blocks, some links etc.
  *   FireBrick - distinct color for note titles etc. (alternative: #2D94FA)
+ *
+ * --- Color associations ---
+ *
+ * Text colors:   DimGray => #333333 => Black
+ * Header colors: Black => #8c1b1b => FireBrick
+ * Tag colors:    DimGray => #4F8F85 => #588F4F
  */
 
 /* --- Page frame  */
@@ -91,8 +102,12 @@ html, body {
 html {
   background-color: White;
   color: DimGray;
-  font-size: 100.01%;
-  font-family: sans-serif, Arial;
+  font: 9pt/1.4 Verdana, Arial, sans-serif;
+}
+@media print {
+  html {
+    font: 100%/150% Georgia, "Times New Roman", serif;
+  }
 }
 
 @media screen {
@@ -107,13 +122,10 @@ h1 {
      * Adjust top padding instead of margin as margin pop out of <body>.
      * There are other solutions.
      */
-  margin: 0;
-  padding: 0;
-  margin-bottom: 10px;
-  padding-top: 10px;
-
   font-size: 1.5em;
   font-weight: normal;
+  padding: 10px 0 0;
+  margin: 0 0 10px;
   text-align: center;
 }
 
@@ -251,6 +263,12 @@ div.note {
   margin: 10px 0;
   border: 1px Solid Gainsboro;
   padding: 10px;
+
+    /*
+     * Without this IE displays additional border below the top padding.
+     * Setting "background-color: inherit;" does not work here.
+     */
+  *background-color: White;
 }
 div.note.selected {
   /*
@@ -279,10 +297,10 @@ div.title a {
 
   /* compare with p */
 div.header {
-  margin-bottom: 10px;
+  margin-bottom: 1.2em;
 }
 div.tags {
-  margin-top: 10px;
+  margin-top: 1.2em;
 }
 
 /* --- Note content decoration */
@@ -298,50 +316,76 @@ blockquote {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
 ol, ul {
-  margin-left: 31px;
-  padding-left: 0;
+  margin: 0 0 1.2em 2.5em;
+  padding: 0;
 }
 li {
-  margin: 0;
+  margin: 5px 0 5px;
   padding: 0;
-}
-dd, li {
-  margin-top: 5px;
-  margin-bottom: 5px;
 }
 
-h2, h3, h4 {
-  font-weight: normal;
-  margin: 10px 0;
+dl {
+  margin: 0 0 1.6em;
   padding: 0;
 }
+dt {
+  margin: 1.2em 0 .8em;
+}
+dd {
+  margin: 0 0 0 2.5em;
+  padding: 0;
+}
+
+p {
+  /* compare with div.header and div.tags */
+  margin: 0 0 1.2em;
+  padding: 0;
+}
+h2, h3, h4 {
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+
+    /*
+     * Intensionally set bottom margins in pixels so that they would be equal
+     * for headers of different levels. It seems to me that headers
+     * with different bottom margins look not so good.
+     */
+  margin-top: 1.6em;
+  margin-bottom: 14px;
+}
 h2 {
-  font-size: 1.25em;
+  color: FireBrick;
+  font-size: 1.6em;
 }
 h3 {
-  font-size: 1.17em;
+  color: #8c1b1b;
+  font-size: 1.4em;
 }
 h4 {
-  font-size: 1.1em;
+  color: Black;
+  font-size: 1.2em;
+}
+  /* This does not work in IE... so IE users will do without it. */
+h2+h3, h2+h4, h3+h4 {
+  margin-top: 0;
 }
 
 hr {
+  background-color: Gray;
   border-width: 0;
-  border-top: 1px Solid Gray;
+  color: Gray;
+  height: 1px;
 }
 
 img.bordered {
   border: 1px Solid Gray;
 }
 
-p {
-  /* compare with div.header and div.tags */
-  margin: 10px 0;
-}
-
 pre, code {
-  font-family: monospace, Courier New, Courier;
+  font-family: monospace;
   white-space: pre;
 }
 pre {
@@ -385,15 +429,12 @@ pre {
 table {
   border-collapse: collapse;
 }
-td,
-th {
+td, th {
   border: 1px Solid Gray;
   font-weight: normal;
   padding: 5px;
 }
 
-h2, h3, h4,
-pre, code,
-th {
+pre, code, th {
   color: #333333;
 }
