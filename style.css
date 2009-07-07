@@ -218,6 +218,9 @@ div.tags {
 a {
   color: #1D60A3;
 }
+a.img {
+  border-width: 0;
+}
 
 blockquote {
   margin-left: 20px;
@@ -257,6 +260,10 @@ h4 {
 hr {
   border-width: 0;
   border-top: 1px Solid Gray;
+}
+
+img.bordered {
+  border: 1px Solid Gray;
 }
 
 p {
