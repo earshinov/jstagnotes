@@ -81,14 +81,11 @@ var $filter = null;
 
 var Cloud = new function(){
 
-  this.addTag = function(tag, size){
-    var $allTags = $("#all_tags").append(" ");
-    var $a = $("<a href='#' class='note_tag tag_size_" + size + "'>" + tag + "</a>").appendTo($allTags);
-
-    if (size < 3){
-      var $popularTags = $("#popular_tags").append(" ");
-      $a.clone().appendTo($popularTags);
-    }
+  function addTag(tag, size){
+    var $tags = $("#all_tags");
+    if (size < 3)
+      $tags = $tags.add("#popular_tags");
+    $tags.append(" <a href='#' class='note_tag tag_size_" + size + "'>" + tag + "</a>");
   }
 
   this.recalculate = function(){
@@ -97,65 +94,41 @@ var Cloud = new function(){
     $("#all_tags a.note_tag").remove();
     $("#popular_tags a.note_tag").remove();
 
-    var tags = new Object();
-    var tagsArray = new Array();
-    var notesCountPerTag_max = 1;
+    var tagsCount = {};
+    var tagsArray = []; // for sorting
+    var notesCountPerTag_max = Number.MIN_VALUE;
 
     $("div.note:visible a.note_tag").each(function(){
-      tag = $(this).text();
-
-      if (!tags[tag]){
-        tags[tag] = 1;
+      var tag = $(this).text();
+      if (!tagsCount.hasOwnProperty(tag)){
+        tagsCount[tag] = 1;
         tagsArray.push(tag);
       }
       else{
-        tags[tag]++;
-
-        if (tags[tag] > notesCountPerTag_max)
-          notesCountPerTag_max = tags[tag];
+        tagsCount[tag]++;
+        if (tagsCount[tag] > notesCountPerTag_max)
+          notesCountPerTag_max = tagsCount[tag];
       }
     });
 
-    tagsArray.sort(function(a, b){
-      var a1 = a.toLowerCase();
-      var b1 = b.toLowerCase();
+    var notesCountPerTag_min = Number.MAX_VALUE;
+    $.each(tagsCount, function(tag, count){
+      if (count < notesCountPerTag_min)
+        notesCountPerTag_min = count;
+    });
+    var notesCountPerTag_range = notesCountPerTag_max - notesCountPerTag_min + 1;
 
-      /* Unfortunately, JavaScript does not provide a method like strcmp */
-      if (a1 < b1) return -1;
-      if (a1 == b1) return 0;
-      return 1;
+    tagsArray.sort(function(a, b){
+      return a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase());
     });
 
-    var notesCountPerTag_min = 1;
-    if (tags.length > 0){
-      var _first = true;
-      for (tag in tags)
-        if (_first){
-          notesCountPerTag_min = tags[tag];
-          _first = false;
-        }
-        else if (tags[tag] < notesCountPerTag_min)
-          notesCountPerTag_min = tags[tag];
-    }
-
-    var notesCountPerTag_range = notesCountPerTag_max - notesCountPerTag_min + 1;
-    for (var index=0; index < tagsArray.length; index++) {
-      var tag = tagsArray[index];
-
-      if (Filter.isTagChosen(tag))
-        continue;
-
-      var _size = tags[tag] / notesCountPerTag_range;
-      /* The numbers below was chosen a posteriori */
-      if (_size > 0.3)
-        _size = 1;
-      else if (_size > 0.1)
-        _size = 2;
-      else
-        _size = 3;
-
-      this.addTag(tag, _size);
-    }
+    $.each(tagsArray, function(i, tag){
+      if (!Filter.isTagChosen(tag)){
+        var percent = tagsCount[tag] / notesCountPerTag_range;
+        /* The numbers below were chosen a posteriori */
+        addTag(tag, 3 - (percent > 0.1) - (percent > 0.3));
+      }
+    });
 
     //console.profileEnd();
   }
@@ -166,10 +139,14 @@ var Cloud = new function(){
 
 var Filter = new function(){
 
-  this.tags = new Array();
+  this.tags = [];
 
   this.isEmpty = function(){
     return this.tags.length == 0;
+  }
+
+  this.isTagChosen = function(tag){
+    return this.tags.indexOf(tag) != -1;
   }
 
   this.addTag = function(tag){
@@ -202,9 +179,9 @@ var Filter = new function(){
     Cloud.recalculate();
   }
 
-  this.isTagChosen = function(tag){
-    return this.tags.indexOf(tag) != -1;
-  }
+  this.toggleTag = function(tag, condition){
+    return condition ? this.addTag(tag) : this.removeTag(tag);
+  };
 
 }();
 
@@ -261,11 +238,9 @@ var Notes = new function(){
 
     $("div.note:hidden").each(function(){
       var $tags = $(this).find("a.note_tag");
-      for (var i = 0; i < Filter.tags.length; i++){
-        if (! $tags.existsText(Filter.tags[i])){
+      for (var i = 0; i < Filter.tags.length; i++)
+        if (! $tags.existsText(Filter.tags[i]))
           return;
-        }
-      }
       $(this).show();
     });
 
@@ -298,12 +273,7 @@ var Notes = new function(){
     });
 
     $("div.note a.note_tag").each(function(){
-      if (Filter.isTagChosen($(this).text())){
-        $(this).addClass("chosen_tag");
-      }
-      else{
-        $(this).removeClass("chosen_tag");
-      }
+      $(this).toggleClass("chosen_tag", Filter.isTagChosen($(this).text()));
     });
   }
 
@@ -342,10 +312,7 @@ $(document).ready(function(){
 
   $("a.note_tag").live("click", function(){
     var $this = $(this);
-    if ($this.hasClass("chosen_tag"))
-      Filter.removeTag($this.text());
-    else
-      Filter.addTag($this.text());
+    Filter.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
     return false;
   });
 
