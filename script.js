@@ -87,11 +87,11 @@ var Maps = {
 
 var Cloud = new function(){
 
-  function addTag(tag, size){
+  function addTag(tag, size, count){
     var $tags = $("#all_tags");
     if (size < 3)
       $tags = $tags.add("#popular_tags");
-    $tags.append(" <a href='#' class='note_tag tag_size_" + size + "'>" + tag + "</a>");
+    $tags.append(" <a href='#' title='" + count + "' class='note_tag tag_size_" + size + "'>" + tag + "</a>");
   }
 
   this.recalculate = function(){
@@ -130,9 +130,10 @@ var Cloud = new function(){
 
     $.each(tagsArray, function(i, tag){
       if (!Filter.isTagChosen(tag)){
-        var percent = tagsCount[tag] / notesCountPerTag_range;
+        var count = tagsCount[tag];
+        var percent = count / notesCountPerTag_range;
         /* The numbers below were chosen a posteriori */
-        addTag(tag, 3 - (percent > 0.1) - (percent > 0.3));
+        addTag(tag, 3 - (percent > 0.1) - (percent > 0.3), count);
       }
     });
 
