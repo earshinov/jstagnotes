@@ -93,6 +93,7 @@ L10N.dict = L10N.dict || {};
 //L10N.dict["Popular"] =
 //L10N.dict["All"] =
 //L10N.dict["Filter"] =
+//L10N.dict["Add from list"] =
 
 L10N.dictPlural = L10N.dictPlural || {};
 if (L10N.dictPlural["note"] === undefined)
@@ -134,13 +135,14 @@ var Cloud = new function(){
     $tags.append(" <a href='#' " +
       "title='" + I18N.trPlural(count, "note", true) + "' " +
       "class='note_tag tag_size_" + size + "'>" + tag + "</a>");
+    $("#select_tag").append($(document.createElement("option")).text(tag));
   }
 
   this.recalculate = function(){
     //console.profile();
 
-    $("#all_tags a.note_tag").remove();
-    $("#popular_tags a.note_tag").remove();
+    $("#all_tags, #popular_tags").empty();
+    $("#select_tag").children(":not(:empty)").remove();
 
     var tagsCount = {};
     var tagsArray = []; // for sorting
@@ -178,6 +180,10 @@ var Cloud = new function(){
         addTag(tag, 3 - (percent > 0.1) - (percent > 0.3), count);
       }
     });
+
+    /* IE does not automatically update select's width when the set of options is changed */
+    if ($.browser.msie)
+      $("#select_tag").css("width", "auto");
 
     //console.profileEnd();
   };
@@ -324,6 +330,12 @@ function header(){
     "    <div id='popular_tags'></div>\n" +
     "    <div id='all_tags' style='display: none'></div>\n" +
     "  </div>\n" +
+    "  <div>\n" +
+    "    <label for='select_tag'>" + I18N.tr("Add from list") + ":</label>\n" +
+    "    <select id='select_tag'>\n" +
+    "      <option></option>\n" +
+    "    </select>\n" +
+    "  </div>\n" +
     "  <div id='filter' style='display: none'>\n" +
     "    " + I18N.tr("Filter") + ":\n" +
     "  </div>\n" +
@@ -346,6 +358,17 @@ $(document).ready(function(){
   }
 
   function bindEventHandlers(){
+    $("#select_tag")
+      .keyup(function(e){
+        if (e.keyCode === 27 /* Esc */)
+          $(this).val("");
+      })
+      .change(function(e){
+        var val = $(this).val();
+        if (val !== "")
+          Filter.addTag(val);
+      });
+
     $("a.note_tag").live("click", function(){
       var $this = $(this);
 

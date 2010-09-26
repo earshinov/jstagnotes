@@ -198,14 +198,15 @@ a.note_tag.chosen_tag {
 #control {
   margin-bottom: 20px; /* margin-top is not needed as margin-bottom for <h1> is set */
   border: 1px Solid FireBrick;
-  padding: 10px;
+  padding: 5px;
+}
+
+#control div {
+  margin: 5px;
 }
 
 #popular_tags,
 #all_tags {
-  margin: 5px;
-  padding: 0;
-
   /*
    * It's worth increasing line-height here so that consequent lines
    * within the tag cloud containing only the smallest (not popular) tags
