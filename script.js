@@ -249,7 +249,6 @@ var Filter = new function(){
     $(tagString(tag)).insertBefore($clear);
     $filter.show();
 
-    $.bbq.pushState({ tags: this.tags });
     if (TestOptions.test)
       console.time("Notes.updateForSelectedTag");
     Notes.updateForSelectedTag(tag);
@@ -265,7 +264,6 @@ var Filter = new function(){
     if (this.isEmpty())
       $filter.hide();
 
-    $.bbq.pushState({ tags: this.tags });
     if (TestOptions.test)
       console.time("Notes.updateForDeselectedTag");
     Notes.updateForDeselectedTag(tag);
@@ -279,9 +277,6 @@ var Filter = new function(){
   };
 
   this.setTags = function(tags){
-    /* prevent recursion */
-    if (array_equal(this.tags, tags))
-      return false;
     $filter.children("a").remove();
     this.tags = tags;
     if (this.tags.length === 0)
@@ -293,10 +288,8 @@ var Filter = new function(){
       });
     }
 
-    $.bbq.pushState({ tags: this.tags });
     Notes.update();
     Cloud.recalculate();
-    return true;
   };
 
 }();
@@ -330,10 +323,13 @@ var Notes = new function(){
     var domHide = [];
     $(".note:visible").each(function(){
       var $this = $(this);
-      if (TagsCache.getNoteTags($this).indexOf(tag) === -1)
+      if (TagsCache.getNoteTags($this).indexOf(tag) === -1){
+        State.removeAnchor($this);
+        State.removeSelected($this);
         domHide.push(this);
+      }
     });
-    $(domHide).removeClass("selected").hide();
+    $(domHide).hide();
 
     $("#notes .note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
   };
@@ -341,7 +337,8 @@ var Notes = new function(){
   this.updateForDeselectedTag = function(tag){
     if (Filter.isEmpty()){
       $("#notes .note_tag").removeClass("chosen_tag");
-      $(".note").removeClass("selected").show();
+      $(".note").show();
+      State.setSelected([]);
       return;
     }
 
@@ -358,8 +355,15 @@ var Notes = new function(){
   };
 
   this.update = function(){
+
+    State.setSelected([]);
     $(".note").each(function(){
-      $(this).removeClass("selected").toggle(noteSatisfiesFilter($(this)));
+      if (noteSatisfiesFilter($(this)))
+        $(this).show();
+      else{
+        State.removeAnchor($(this));
+        $(this).hide();
+      }
     });
 
     $("#notes .note_tag").each(function(){
@@ -367,18 +371,160 @@ var Notes = new function(){
     });
   };
 
+}();
+
+/* --- State ---------------------------------------------------------------- */
+
+/*
+ * Object for storing the state managed by jQuery BBQ plugin.  It's needed
+ * as we can't directly use $.bbq.pushState() each time a part of the state
+ * changes because a change in one part may cause a change in another (for
+ * example, change of tags may cause a temporarily shown note to become normal)
+ * what would result in several history entries.  The following scheme is
+ * proposed: code triggered by user action calls core methods, which modify
+ * this object, and then State.sync().
+ *
+ * Setter functions usually return true if the value has changed from the last
+ * time and was updated.  Otherwise false is returned.
+ */
+var State = new function(){
+
+  var anchor = null;
+  var selected = [];
+
+  function scrollTo(id){
+    var $elem = $(Maps.fromId(id));
+    this.addSelected(id);
+    $.scrollTo($elem);
+  }
+
   /*
-   * Force a note to be shown.
-   *
-   * Function will do nothing if the note is visible. Otherwise it will
-   * show the note and add "selected" CSS class to it.
-   *
-   * The note will be hidden again when a user changes the set of selected tags
-   * (i.e., if he selects or deselects a tag) and the "selected" CSS class will
-   * be removed.
+   * Functions for managing tags.
+   * Actually what is written to history is Filter.tags array, and these
+   * functions just provide additional abstraction level above Filter.
    */
-  this.showNote = function($note){
-    $note.filter(":hidden").addClass("selected").show();
+
+  this.addTag = function(tag){
+    Filter.addTag(tag);
+  };
+
+  this.removeTag = function(tag){
+    Filter.removeTag(tag);
+  };
+
+  this.toggleTag = function(tag, condition){
+    Filter.toggleTag(tag, condition);
+  };
+
+  this.setTags = function(tags){
+    if (tags === undefined)
+      tags = [];
+    if (array_equal(Filter.tags, tags))
+      return false;
+    Filter.setTags(tags);
+    return true;
+  };
+
+  /*
+   * Functions for managing the anchor (if any)
+   */
+
+  /*
+   * Set anchor
+   * @param anc           Current anchor or @c null
+   * @param forceScroll   Whether to scroll to anchor even if it hasn't changed
+   */
+  this.setAnchor = function(anc, forceScroll){
+    if (anc === undefined)
+      anc = null;
+    if (anc !== null && (anchor !== anc || forceScroll))
+      scrollTo.call(this, anc);
+    if (anchor === anc)
+      return false;
+    anchor = anc;
+    return true;
+  };
+
+  this.removeAnchor = function($note){
+    if ($note.attr("id") === anchor){
+      anchor = null;
+      return true;
+    }
+    return false;
+  }
+
+  /*
+   * Functions for managing temporarily shown ("selected") notes.
+   *
+   * Note that the add function shows the added note, but hide function does
+   * not automatically hide it, and the set function takes an argument that
+   * controls what to do.  That's because a selected note is always shown, by
+   * definition, but when it becomes non-selected, it may either get normal
+   * state or get hidden.
+   */
+
+  this.addSelected = function(id){
+    var $note = $(Maps.fromId(id)).filter("div.note:hidden");
+    if ($note.length === 0)
+      return false;
+    selected.push(id);
+    $note.addClass("selected").show();
+    return true;
+  }
+
+  this.removeSelected = function($note){
+    var id = $note.attr("id");
+    if (!id)
+      return false;
+    var pos = selected.indexOf(id);
+    if (pos == -1)
+      return false;
+    selected.splice(pos, 1);
+    $note.removeClass("selected");
+    return true;
+  }
+
+  this.setSelected = function(sel, hide){
+    if (sel === undefined)
+      sel = [];
+    if (array_equal(selected, sel))
+      return false;
+
+    var $notes = $("div.selected");
+    $notes.removeClass("selected");
+    if (hide)
+      $notes.hide();
+
+    selected = [];
+    $.each(sel, function(id){
+      State.addSelected(id);
+    });
+    return true;
+  };
+
+  /*
+   * General functions
+   */
+
+  /* Push state to jQuery BBQ plugin */
+  this.sync = function(){
+    var state = {
+      tags: Filter.tags,
+      selected: selected
+    };
+    if (anchor !== null)
+      state["anchor"] = anchor;
+
+    var prevScroll;
+    if (Filter.tags.length === 0 && selected.length === 0 && anchor === null)
+      // According to BBQ plugin documentation,
+      // setting empty state may cause browser to scroll
+      prevScroll = $(window).scrollTop();
+
+    $.bbq.pushState(state, 2);
+
+    if (prevScroll !== undefined)
+      $.scrollTo(prevScroll);
   };
 
 }();
@@ -464,19 +610,14 @@ $(document).ready(function(){
   }
 
   function basicInit(){
-    var lastTarget;
     var init = true;
     $(window).bind("hashchange", function(event){
-
-      if (!Filter.setTags(event.getState("tags") || []) && init)
-        /* Initialize the tag cloud if it wasn't already done by Filter */
+      if (!State.setTags(event.getState("tags")) && init)
+        /* Initialize the tag cloud if it wasn't already done by State */
         Cloud.recalculate();
-
-      var target = event.getState("anchor");
-      if (target && target !== lastTarget)
-        $.scrollTo("#" + target);
-      lastTarget = target;
-
+      State.setSelected(event.getState("selected"), true);
+      State.setAnchor(event.getState("anchor"));
+      State.sync();
     }).trigger("hashchange");
     init = false;
   }
@@ -489,12 +630,15 @@ $(document).ready(function(){
       })
       .change(function(e){
         var val = $(this).val();
-        if (val !== "")
-          Filter.addTag(val);
+        if (val !== ""){
+          State.addTag(val);
+          State.sync();
+        }
       });
 
     $("#clear_filter").click(function(){
-      Filter.setTags([]);
+      State.setTags([]);
+      State.sync();
     });
 
     $(".note_tag").live("click", function(){
@@ -508,16 +652,16 @@ $(document).ready(function(){
         prevOffset = $this.offset().top;
       }
 
-      Filter.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
+      State.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
       if (restoreScroll)
         $(window).scrollTop(prevScroll + $this.offset().top - prevOffset);
+      State.sync();
       return false;
     });
 
     $("a[href^=#][href!=#]").click(function(){
-      var href = $(this).attr("href");
-      $.bbq.pushState({ "anchor": href.substr(1) });
-      $.scrollTo(href);
+      State.setAnchor($(this).attr("href").substr(1), true);
+      State.sync();
       return false;
     });
   }
