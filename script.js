@@ -270,17 +270,36 @@ var Notes = new function(){
 
 /* --- Startup -------------------------------------------------------------- */
 
-$(document).ready(function(){
+function header(){
+  document.write(
+    "<h1>" + document.title + "</h1>\n" +
+    "<div id='control'>\n" +
+    "  <div id='cloud'>\n" +
+    "    Метки:\n" +
+    "    <a href='#' id='toggle_tags' class='js_link'>Скрыть</a>\n" +
+    "    <a href='#' id='toggle_popular_tags' class='js_link active_link'>Популярные</a>\n" +
+    "    <a href='#' id='toggle_all_tags' class='js_link'>Все</a>\n" +
+    "    <div id='popular_tags'></div>\n" +
+    "    <div id='all_tags' style='display: none'></div>\n" +
+    "  </div>\n" +
+    "  <div id='filter' style='display: none'>\n" +
+    "    Фильтр:\n" +
+    "  </div>\n" +
+    "</div>\n" +
+    "<div id='notes'>");
+}
 
+function footer(){
+  document.write("</div>");
+}
+
+$(document).ready(function(){
   basicInit();
   bindEventHandlers();
   bindTagCloudEventHandlers();
   initPrinting();
 
   function basicInit(){
-    $("#toggle_popular_tags").addClass("active_link");
-    $("#all_tags, #filter").hide();
-
     Cloud.recalculate();
   }
 
