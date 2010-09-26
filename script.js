@@ -83,6 +83,46 @@ var Maps = {
   }
 };
 
+/* --- Internationalization ------------------------------------------------- */
+
+var L10N = L10N || {};
+
+L10N.dict = L10N.dict || {};
+//L10N.dict["Tags"] =
+//L10N.dict["Hide"] =
+//L10N.dict["Popular"] =
+//L10N.dict["All"] =
+//L10N.dict["Filter"] =
+
+L10N.dictPlural = L10N.dictPlural || {};
+if (L10N.dictPlural["note"] === undefined)
+  L10N.dictPlural["note"] = ["note", "notes"];
+
+// http://translate.sourceforge.net/wiki/l10n/pluralforms
+L10N.plural = L10N.plural || function(n){
+  return n != 1;
+};
+
+var I18N = new function(){
+
+  this.tr = function(text){
+    var ret = L10N.dict[text];
+    if (ret !== undefined)
+      return ret;
+    return text;
+  };
+
+  this.trPlural = function(n, texts, concat){
+    var index = L10N.plural(n);
+    index = +index; // convert to int
+    var ret = L10N.dictPlural[texts][index];
+    if (concat)
+      ret = n + ' ' + ret;
+    return ret;
+  };
+
+}();
+
 /* --- Cloud ---------------------------------------------------------------- */
 
 var Cloud = new function(){
@@ -91,7 +131,9 @@ var Cloud = new function(){
     var $tags = $("#all_tags");
     if (size < 3)
       $tags = $tags.add("#popular_tags");
-    $tags.append(" <a href='#' title='" + count + "' class='note_tag tag_size_" + size + "'>" + tag + "</a>");
+    $tags.append(" <a href='#' " +
+      "title='" + I18N.trPlural(count, "note", true) + "' " +
+      "class='note_tag tag_size_" + size + "'>" + tag + "</a>");
   }
 
   this.recalculate = function(){
@@ -275,15 +317,15 @@ function header(){
     "<h1>" + document.title + "</h1>\n" +
     "<div id='control'>\n" +
     "  <div id='cloud'>\n" +
-    "    Метки:\n" +
-    "    <a href='#' id='toggle_tags' class='js_link'>Скрыть</a>\n" +
-    "    <a href='#' id='toggle_popular_tags' class='js_link active_link'>Популярные</a>\n" +
-    "    <a href='#' id='toggle_all_tags' class='js_link'>Все</a>\n" +
+    "    " + I18N.tr("Tags") + ":\n" +
+    "    <a href='#' id='toggle_tags' class='js_link'>" + I18N.tr("Hide") +"</a>\n" +
+    "    <a href='#' id='toggle_popular_tags' class='js_link active_link'>" + I18N.tr("Popular") +"</a>\n" +
+    "    <a href='#' id='toggle_all_tags' class='js_link'>" + I18N.tr("All") +"</a>\n" +
     "    <div id='popular_tags'></div>\n" +
     "    <div id='all_tags' style='display: none'></div>\n" +
     "  </div>\n" +
     "  <div id='filter' style='display: none'>\n" +
-    "    Фильтр:\n" +
+    "    " + I18N.tr("Filter") + ":\n" +
     "  </div>\n" +
     "</div>\n" +
     "<div id='notes'>");
