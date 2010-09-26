@@ -30,11 +30,6 @@ If this script runs slowly, you may apply the following optiomizations:
    We can use the same array. To calculate the weight of a tag we just need to
    count the notes in the set the tag maps to, which are currently visible.
 
-[ NOTES ]
-
-1. CSS class selectors (".class") are slow if no tag is specified. Thus I use
-   "tag.class" if the tag is known.
-
 */
 
 /* --- Utils ---------------------------------------------------------------- */
@@ -457,5 +452,3 @@ $(document).ready(function(){
       $('html').addClass('prettyprint');
   }
 });
-
-
