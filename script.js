@@ -286,7 +286,18 @@ $(document).ready(function(){
   function bindEventHandlers(){
     $("a.note_tag").live("click", function(){
       var $this = $(this);
+
+      var restoreScroll = $this.parent().is('.tags');
+      var prevScroll;
+      var prevOffset;
+      if (restoreScroll){
+        prevScroll = $(window).scrollTop();
+        prevOffset = $this.offset().top;
+      }
+
       Filter.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
+      if (restoreScroll)
+        $(window).scrollTop(prevScroll + $this.offset().top - prevOffset);
       return false;
     });
 
