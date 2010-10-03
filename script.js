@@ -49,29 +49,39 @@ function array_remove(array, element) {
       array.splice(i, 1);
 }
 
-jQuery.fn.exists = function(fn){
+jQuery.fn.any = function(fn){
   var ret = false;
-  $(this).each(function(){
-    if (fn.call(this)){
+  $(this).each(function(i, item){
+    if (fn.call(this, item)){
       ret = true;
       return false; // break from 'each'
     }
   });
   return ret;
-}
+};
 
-jQuery.fn.existsText = function(text){
-  return $(this).exists(function(){
-    return $(this).text() == text;
+jQuery.fn.all = function(fn){
+  var ret = true;
+  $(this).each(function(i, item){
+    if (!fn.call(this, item)){
+      ret = false;
+      return false; // break from 'each'
+    }
   });
-}
+  return ret;
+};
 
-jQuery.fn.select = function(fn, callback){
-  $(this).each(function(){
-    if (fn.call(this))
-      return callback.call(this);
-  });
-}
+var Predicates = {
+  hasText: function(text){ return function(){
+    return $(this).text() === text;
+  }; }
+};
+
+var Maps = {
+  getText: function(){
+    return $(this).text();
+  }
+};
 
 /* --- Globals -------------------------------------------------------------- */
 
@@ -151,7 +161,6 @@ var Filter = new function(){
 
   this.addTag = function(tag){
     this.tags.push(tag);
-
     $filter.append("<a href='#' class='note_tag chosen_tag'>" + tag + "</a> ");
     $filter.show();
 
@@ -160,18 +169,8 @@ var Filter = new function(){
   }
 
   this.removeTag = function(tag){
-
-    $filter.find("a").select(
-      function(){
-        return $(this).text() == tag;
-      },
-      function(){
-        $(this).remove();
-        return false; // break (select only one)
-      }
-    );
-
     array_remove(this.tags, tag);
+    $filter.find("a").filter(Predicates.hasText(tag)).remove();
     if (this.isEmpty())
       $filter.hide();
 
@@ -190,6 +189,13 @@ var Filter = new function(){
 var Notes = new function(){
 
   var $shownNotes = $([]);
+
+  function noteSatisfiesFilter($note){
+    var tags = $note.find("a.note_tag").map(Maps.getText).get();
+    return $(Filter.tags).all(function(tag){
+      return tags.indexOf(tag) !== -1;
+    });
+  }
 
   function updateCommon(){
     $shownNotes.hide().removeClass("selected");
@@ -212,19 +218,12 @@ var Notes = new function(){
     var $hide = $([]);
     $("div.note:visible").each(function(){
       var $this = $(this);
-      if (! $this.find("a.note_tag").existsText(tag))
+      if (! $this.find("a.note_tag").any(Predicates.hasText(tag)))
         $hide = $hide.add($this);
     });
     $hide.hide();
 
-    $("div.note a.note_tag").select(
-      function(){
-        return $(this).text() == tag;
-      },
-      function(){
-        $(this).addClass("chosen_tag");
-      }
-    );
+    $("div.note a.note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
   }
 
   this.updateForDeselectedTag = function(tag){
@@ -237,21 +236,11 @@ var Notes = new function(){
     }
 
     $("div.note:hidden").each(function(){
-      var $tags = $(this).find("a.note_tag");
-      for (var i = 0; i < Filter.tags.length; i++)
-        if (! $tags.existsText(Filter.tags[i]))
-          return;
-      $(this).show();
+      if (noteSatisfiesFilter($(this)))
+        $(this).show();
     });
 
-    $("div.note a.note_tag").select(
-      function(){
-        return $(this).text() == tag;
-      },
-      function(){
-        $(this).removeClass("chosen_tag");
-      }
-    );
+    $("div.note a.note_tag").filter(Predicates.hasText(tag)).removeClass("chosen_tag");
   }
 
   /*
@@ -262,14 +251,7 @@ var Notes = new function(){
     updateCommon();
 
     $("div.note").each(function(){
-      var $tags = $(this).find("a.note_tag");
-      for (var i = 0; i < Filter.tags.length; i++){
-        if (! $tags.existsText(Filter.tags[i])){
-          $(this).hide();
-          return;
-        }
-      }
-      $(this).show();
+      $(this).toggle(noteSatisfiesFilter($(this)));
     });
 
     $("div.note a.note_tag").each(function(){
