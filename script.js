@@ -289,6 +289,7 @@ var Notes = new function(){
    * updateForSelectedTag() and updateForDeselectedTag().
    */
   this.update = function(){
+    updateCommon();
 
     $("div.note").each(function(){
       var $tags = $(this).find("a.note_tag");
