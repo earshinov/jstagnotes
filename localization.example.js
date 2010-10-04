@@ -6,7 +6,8 @@ var L10N = {
     //"Popular": "",
     //"All": "",
     //"Filter": "",
-    //"Add from list": ""
+    //"Add from list": "",
+    //"Clear": ""
   },
 
   dictPlural: {

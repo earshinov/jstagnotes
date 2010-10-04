@@ -242,6 +242,11 @@ a.note_tag.chosen_tag {
   margin-right: 2px;
 }
 
+#filter a.note_tag {
+  /* separate chosen tags from the clear button */
+  margin-right: 5px;
+}
+
 /* --- Note frame */
 
 div.note {

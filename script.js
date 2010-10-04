@@ -103,6 +103,7 @@ L10N.dict = L10N.dict || {};
 //L10N.dict["All"] =
 //L10N.dict["Filter"] =
 //L10N.dict["Add from list"] =
+//L10N.dict["Clear"] =
 
 L10N.dictPlural = L10N.dictPlural || {};
 if (L10N.dictPlural["note"] === undefined)
@@ -203,13 +204,14 @@ var Cloud = new function(){
 
 var Filter = new function(){
 
-  var $filter;
+  var $clear, $filter;
   $(function(){
+    $clear = $("#clear_filter");
     $filter = $("#filter");
   });
 
   function tagString(tag){
-    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a> ";
+    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a>";
   }
 
   this.tags = [];
@@ -224,7 +226,7 @@ var Filter = new function(){
 
   this.addTag = function(tag){
     this.tags.push(tag);
-    $filter.append(tagString(tag));
+    $(tagString(tag)).insertBefore($clear);
     $filter.show();
 
     Notes.updateForSelectedTag(tag);
@@ -249,14 +251,14 @@ var Filter = new function(){
     /* prevent recursion */
     if (array_equal(this.tags, tags))
       return false;
-    $filter.empty();
+    $filter.children("a").remove();
     this.tags = tags;
     if (this.tags.length === 0)
       $filter.hide();
     else{
       $filter.show();
       $.each(this.tags, function(i, tag){
-        $filter.append(tagString(tag));
+        $(tagString(tag)).insertBefore($clear);
       });
     }
 
@@ -366,7 +368,14 @@ function header(){
     "    </select>\n" +
     "  </div>\n" +
     "  <div id='filter' style='display: none'>\n" +
-    "    " + I18N.tr("Filter") + ":\n" +
+    "    " + I18N.tr("Filter") + ":" +
+      /*
+       * Separate the label and the button with a single unbreakable space as IE6
+       * ignores all ordinary space before buttons and thus sticks tags to the
+       * label.  There must be no other whitespace here as otherwise normal
+       * browsers will display several space characters.
+       */
+    "&nbsp;<button id='clear_filter'>" + I18N.tr("Clear") + "</button>\n" +
     "  </div>\n" +
     "</div>\n" +
     "<div id='notes'>");
@@ -397,6 +406,10 @@ $(document).ready(function(){
         if (val !== "")
           Filter.addTag(val);
       });
+
+    $("#clear_filter").click(function(){
+      Filter.setTags([]);
+    });
 
     $("a.note_tag").live("click", function(){
       var $this = $(this);
