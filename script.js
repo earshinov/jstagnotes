@@ -282,122 +282,125 @@ var Notes = new function(){
 
 $(document).ready(function(){
 
-  $("#toggle_popular_tags").addClass("active_link");
-  $("#all_tags, #filter").hide();
+  basicInit();
+  bindEventHandlers();
+  bindTagCloudEventHandlers();
+  initPrinting();
 
-  /* ----- */
+  function basicInit(){
+    $("#toggle_popular_tags").addClass("active_link");
+    $("#all_tags, #filter").hide();
 
-  $filter = $("#filter");
-  Cloud.recalculate();
+    $filter = $("#filter");
+    Cloud.recalculate();
+  }
 
-  /* ----- */
+  function bindEventHandlers(){
+    $("a.note_tag").live("click", function(){
+      var $this = $(this);
+      Filter.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
+      return false;
+    });
 
-  $("a.note_tag").live("click", function(){
-    var $this = $(this);
-    Filter.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
-    return false;
-  });
+    $("a[href^=#][href!=#]").each(function(){
+      var $this = $(this);
+      var $note = $($this.attr("href"));
+      if ($note.is("div.note")){
+        $this.click(function(){
+          Notes.showNote($note);
+          /* propagade the event further so that we actually follow the link */
+        });
+      }
+    });
+  }
 
-  /* ----- */
+  function bindTagCloudEventHandlers(){
 
-  $("#toggle_tags").click(function(){
-    if (!$(this).hasClass("active_link")){
+    $("#toggle_tags").click(function(){
+      if (!$(this).hasClass("active_link")){
 
-      $("#toggle_popular_tags").removeClass("active_link");
-      $("#toggle_all_tags").removeClass("active_link");
-      $(this).addClass("active_link");
+        $("#toggle_popular_tags").removeClass("active_link");
+        $("#toggle_all_tags").removeClass("active_link");
+        $(this).addClass("active_link");
 
-      $("#all_tags").hide();
-      $("#popular_tags").hide();
-    }
-    return false;
-  });
+        $("#all_tags").hide();
+        $("#popular_tags").hide();
+      }
+      return false;
+    });
 
-  $("#toggle_popular_tags").click(function(){
-    if (!$(this).hasClass("active_link")){
+    $("#toggle_popular_tags").click(function(){
+      if (!$(this).hasClass("active_link")){
 
-      $("#toggle_tags").removeClass("active_link");
-      $("#toggle_all_tags").removeClass("active_link");
-      $(this).addClass("active_link");
+        $("#toggle_tags").removeClass("active_link");
+        $("#toggle_all_tags").removeClass("active_link");
+        $(this).addClass("active_link");
 
-      $("#all_tags").hide();
-      $("#popular_tags").show();
-    }
-    return false;
-  });
+        $("#all_tags").hide();
+        $("#popular_tags").show();
+      }
+      return false;
+    });
 
-  $("#toggle_all_tags").click(function(){
-    if (!$(this).hasClass("active_link")){
+    $("#toggle_all_tags").click(function(){
+      if (!$(this).hasClass("active_link")){
 
-      $("#toggle_tags").removeClass("active_link");
-      $("#toggle_popular_tags").removeClass("active_link");
-      $(this).addClass("active_link");
+        $("#toggle_tags").removeClass("active_link");
+        $("#toggle_popular_tags").removeClass("active_link");
+        $(this).addClass("active_link");
 
-      $("#popular_tags").hide();
-      $("#all_tags").show();
-    }
-    return false;
-  });
-
-  /* ----- */
-
-  $("a[href^=#][href!=#]").each(function(){
-    var $this = $(this);
-    var $note = $($this.attr("href"));
-    if ($note.is("div.note")){
-      $this.click(function(){
-        Notes.showNote($note);
-        /* propagade the event further so that we actually follow the link */
-      });
-    }
-  });
-
-  /* ----- */
+        $("#popular_tags").hide();
+        $("#all_tags").show();
+      }
+      return false;
+    });
+  }
 
   /*
    * Pretty printing of links.
    * http://beckelman.net/post/2009/02/16/Use-jQuery-to-Show-a-Linke28099s-Address-After-its-Text-When-Printing-In-IE6-and-IE7.aspx
    */
+  function initPrinting(){
+    //Check to see if browser supports onbeforeprint (IE6, IE7 and IE8)
+    if (window.onbeforeprint !== undefined){
 
-  //Check to see if browser supports onbeforeprint (IE6, IE7 and IE8)
-  if (window.onbeforeprint !== undefined){
+      /*
+       * Selector "a:not([href$=#])" is used below as a more straightforward
+       * one "a[href!=#]" does not work for IE.
+       *
+       * Speaking precisely, it does not work for links that are placed
+       * dynamically to, for example, the tag cloud. Setting "href" attribute
+       * and retrieving it gives us "http://full/page#" instead of plain "#" in,
+       * IE, so we can't just check for equality to "#".
+       */
 
-    /*
-     * Selector "a:not([href$=#])" is used below as a more straightforward
-     * one "a[href!=#]" does not work for IE.
-     *
-     * Speaking precisely, it does not work for links that are placed
-     * dynamically to, for example, the tag cloud. Setting "href" attribute
-     * and retrieving it gives us "http://full/page#" instead of plain "#" in,
-     * IE, so we can't just check for equality to "#".
-     */
-
-    //Since the browser is IE, add event to append link text before print
-    window.onbeforeprint = function(){
-      $("a:not([href$=#])").each(function(){
+      //Since the browser is IE, add event to append link text before print
+      window.onbeforeprint = function(){
+        $("a:not([href$=#])").each(function(){
 
           //Store the link's original text in the jQuery data store
           $(this).data("linkText", $(this).text());
 
           //Append the link to the current text
           $(this).append(" (" + $(this).attr("href") + ")");
-      });
-    };
+        });
+      };
 
-    //Remove the link text since the document has gone to the printer
-    window.onafterprint = function(){
-      $("a:not([href$=#])").each(function(){
+      //Remove the link text since the document has gone to the printer
+      window.onafterprint = function(){
+        $("a:not([href$=#])").each(function(){
 
           //Restore the links text to the original value by pulling it out of the jQuery data store
           $(this).text($(this).data("linkText"));
-      });
-    };
-  }
-  else{
+        });
+      };
+    }
+    else{
       /*
        * The browser is not IE, so we consider CSS :after pseudo element to be
        * supported and activate appropriate styles (see style.css).
        */
       $('html').addClass('prettyprint');
+    }
   }
 });
