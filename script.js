@@ -34,16 +34,16 @@ If this script runs slowly, you may apply the following optiomizations:
 
 /* --- Utils ---------------------------------------------------------------- */
 
-if (!Array.prototype.indexOf)
-  Array.prototype.indexOf = function(x) {
+if (Array.prototype.indexOf === undefined)
+  Array.prototype.indexOf = function(x){
     var l = this.length;
     for (var i = 0; i < l; i++)
       if (this[i] == x)
         return i;
     return -1;
-  }
+  };
 
-function array_remove(array, element) {
+function array_remove(array, element){
   for (var i = 0; i < array.length; i++)
     if (element == array[i])
       array.splice(i, 1);
@@ -141,7 +141,7 @@ var Cloud = new function(){
     });
 
     //console.profileEnd();
-  }
+  };
 
 }();
 
@@ -152,12 +152,12 @@ var Filter = new function(){
   this.tags = [];
 
   this.isEmpty = function(){
-    return this.tags.length == 0;
-  }
+    return this.tags.length === 0;
+  };
 
   this.isTagChosen = function(tag){
-    return this.tags.indexOf(tag) != -1;
-  }
+    return this.tags.indexOf(tag) !== -1;
+  };
 
   this.addTag = function(tag){
     this.tags.push(tag);
@@ -166,7 +166,7 @@ var Filter = new function(){
 
     Notes.updateForSelectedTag(tag);
     Cloud.recalculate();
-  }
+  };
 
   this.removeTag = function(tag){
     array_remove(this.tags, tag);
@@ -176,7 +176,7 @@ var Filter = new function(){
 
     Notes.updateForDeselectedTag(tag);
     Cloud.recalculate();
-  }
+  };
 
   this.toggleTag = function(tag, condition){
     return condition ? this.addTag(tag) : this.removeTag(tag);
@@ -224,7 +224,7 @@ var Notes = new function(){
     $hide.hide();
 
     $("div.note a.note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
-  }
+  };
 
   this.updateForDeselectedTag = function(tag){
     updateCommon();
@@ -241,7 +241,7 @@ var Notes = new function(){
     });
 
     $("div.note a.note_tag").filter(Predicates.hasText(tag)).removeClass("chosen_tag");
-  }
+  };
 
   /*
    * This method is not actually used. It is just a template for
@@ -257,7 +257,7 @@ var Notes = new function(){
     $("div.note a.note_tag").each(function(){
       $(this).toggleClass("chosen_tag", Filter.isTagChosen($(this).text()));
     });
-  }
+  };
 
   /*
    * Force a note to be shown.
@@ -274,7 +274,7 @@ var Notes = new function(){
       $shownNotes = $shownNotes.add($note);
       $note.addClass("selected").show();
     }
-  }
+  };
 
 }();
 
@@ -360,7 +360,7 @@ $(document).ready(function(){
    */
 
   //Check to see if browser supports onbeforeprint (IE6, IE7 and IE8)
-  if (window.onbeforeprint !== undefined) {
+  if (window.onbeforeprint !== undefined){
 
     /*
      * Selector "a:not([href$=#])" is used below as a more straightforward
@@ -382,7 +382,7 @@ $(document).ready(function(){
           //Append the link to the current text
           $(this).append(" (" + $(this).attr("href") + ")");
       });
-    }
+    };
 
     //Remove the link text since the document has gone to the printer
     window.onafterprint = function(){
@@ -391,9 +391,9 @@ $(document).ready(function(){
           //Restore the links text to the original value by pulling it out of the jQuery data store
           $(this).text($(this).data("linkText"));
       });
-    }
+    };
   }
-  else {
+  else{
       /*
        * The browser is not IE, so we consider CSS :after pseudo element to be
        * supported and activate appropriate styles (see style.css).
