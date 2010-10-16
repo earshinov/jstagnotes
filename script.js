@@ -361,21 +361,11 @@ $(document).ready(function(){
    * http://beckelman.net/post/2009/02/16/Use-jQuery-to-Show-a-Linke28099s-Address-After-its-Text-When-Printing-In-IE6-and-IE7.aspx
    */
   function initPrinting(){
-    //Check to see if browser supports onbeforeprint (IE6, IE7 and IE8)
     if (window.onbeforeprint !== undefined){
 
-      /*
-       * Selector "a:not([href$=#])" is used below as a more straightforward
-       * one "a[href!=#]" does not work for IE.
-       *
-       * Speaking precisely, it does not work for links that are placed
-       * dynamically to, for example, the tag cloud. Setting "href" attribute
-       * and retrieving it gives us "http://full/page#" instead of plain "#" in,
-       * IE, so we can't just check for equality to "#".
-       */
-
-      //Since the browser is IE, add event to append link text before print
       window.onbeforeprint = function(){
+        /* Selector "a[href!=#]" does not work in IE as it appends current page
+         * URL to the beginning of the href when it's retrieved with JavaScript */
         $("a:not([href$=#])").each(function(){
 
           //Store the link's original text in the jQuery data store
@@ -386,7 +376,6 @@ $(document).ready(function(){
         });
       };
 
-      //Remove the link text since the document has gone to the printer
       window.onafterprint = function(){
         $("a:not([href$=#])").each(function(){
 
@@ -396,10 +385,7 @@ $(document).ready(function(){
       };
     }
     else{
-      /*
-       * The browser is not IE, so we consider CSS :after pseudo element to be
-       * supported and activate appropriate styles (see style.css).
-       */
+      /* Fallback to CSS */
       $('html').addClass('prettyprint');
     }
   }
