@@ -155,7 +155,7 @@ a.js_link.active_link {
 
 /* See script.js for more details */
 @media print {
-  html.prettyprint a:not([href='#']):after {
+  html.prettyprint a:not([href^='#']):after {
     content: " (" attr(href) ")";
   }
 }

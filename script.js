@@ -364,9 +364,10 @@ $(document).ready(function(){
     if (window.onbeforeprint !== undefined){
 
       window.onbeforeprint = function(){
-        /* Selector "a[href!=#]" does not work in IE as it appends current page
-         * URL to the beginning of the href when it's retrieved with JavaScript */
-        $("a:not([href$=#])").each(function(){
+        /* Selector "a:not([href^=#])" does not work in IE as it appends
+         * current page URL to the beginning of the href when it's retrieved
+         * with JavaScript */
+        $("a:not([href*=#])").each(function(){
 
           //Store the link's original text in the jQuery data store
           $(this).data("linkText", $(this).text());
