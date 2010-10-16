@@ -49,6 +49,15 @@ function array_remove(array, element){
       array.splice(i, 1);
 }
 
+function array_equal(first, second){
+  if (first.length !== second.length)
+    return false;
+  for (var i = 0; i < first.length; i++)
+    if (first[i] !== second[i])
+      return false;
+  return true;
+}
+
 jQuery.fn.any = function(fn){
   var ret = false;
   $(this).each(function(i, item){
@@ -199,6 +208,10 @@ var Filter = new function(){
     $filter = $("#filter");
   });
 
+  function tagString(tag){
+    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a> ";
+  }
+
   this.tags = [];
 
   this.isEmpty = function(){
@@ -211,7 +224,7 @@ var Filter = new function(){
 
   this.addTag = function(tag){
     this.tags.push(tag);
-    $filter.append("<a href='#' class='note_tag chosen_tag'>" + tag + "</a> ");
+    $filter.append(tagString(tag));
     $filter.show();
 
     Notes.updateForSelectedTag(tag);
@@ -230,6 +243,26 @@ var Filter = new function(){
 
   this.toggleTag = function(tag, condition){
     return condition ? this.addTag(tag) : this.removeTag(tag);
+  };
+
+  this.setTags = function(tags){
+    /* prevent recursion */
+    if (array_equal(this.tags, tags))
+      return false;
+    $filter.empty();
+    this.tags = tags;
+    if (this.tags.length === 0)
+      $filter.hide();
+    else{
+      $filter.show();
+      $.each(this.tags, function(i, tag){
+        $filter.append(tagString(tag));
+      });
+    }
+
+    Notes.update();
+    Cloud.recalculate();
+    return true;
   };
 
 }();
@@ -286,10 +319,6 @@ var Notes = new function(){
     $("div.note a.note_tag").filter(Predicates.hasText(tag)).removeClass("chosen_tag");
   };
 
-  /*
-   * This method is not actually used. It is just a template for
-   * updateForSelectedTag() and updateForDeselectedTag().
-   */
   this.update = function(){
     $("div.note").each(function(){
       $(this).removeClass("selected").toggle(noteSatisfiesFilter($(this)));
