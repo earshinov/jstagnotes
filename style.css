@@ -76,8 +76,6 @@ html, body {
 @media screen {
   html {
     height: 100%;
-    margin: 0;
-    padding: 0;
   }
   body {
     margin: 0 auto;
@@ -139,19 +137,11 @@ a {
  * Internal links between notes.
  * This does not work in IE... so IE users will do without it.
  */
-a[href^='#'] {
+a[href^='#']:not([href='#']) {
   text-decoration: none;
   border-bottom: 1px dashed #1D60A3;
 }
 a[href^='#footnote'] {
-  border-bottom-width: 0;
-}
-a[href='#'] {
-  /*
-   * Reset styles from a[href^='#'] as links handled
-   * with JavaScript usually have href='#'.
-   */
-  text-decoration: underline;
   border-bottom-width: 0;
 }
 
@@ -166,16 +156,10 @@ a.js_link.active_link {
   color: #333333;
 }
 
-/*
- * Pretty printing of links.
- * See script.js for more details.
- */
+/* See script.js for more details */
 @media print {
-  html.prettyprint a:after {
+  html.prettyprint a:not([href='#']):after {
     content: " (" attr(href) ")";
-  }
-  html.prettyprint a[href='#']:after {
-    content: "";
   }
 }
 
@@ -352,7 +336,7 @@ h2, h3, h4 {
   padding: 0;
 
     /*
-     * Intensionally set bottom margins in pixels so that they would be equal
+     * Intentionally set bottom margins in pixels so that they would be equal
      * for headers of different levels. It seems to me that headers
      * with different bottom margins look not so good.
      */
