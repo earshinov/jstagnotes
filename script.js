@@ -83,10 +83,6 @@ var Maps = {
   }
 };
 
-/* --- Globals -------------------------------------------------------------- */
-
-var $filter = null;
-
 /* --- Cloud ---------------------------------------------------------------- */
 
 var Cloud = new function(){
@@ -148,6 +144,11 @@ var Cloud = new function(){
 /* --- Filter --------------------------------------------------------------- */
 
 var Filter = new function(){
+
+  var $filter;
+  $(function(){
+    $filter = $("#filter");
+  });
 
   this.tags = [];
 
@@ -291,7 +292,6 @@ $(document).ready(function(){
     $("#toggle_popular_tags").addClass("active_link");
     $("#all_tags, #filter").hide();
 
-    $filter = $("#filter");
     Cloud.recalculate();
   }
 
