@@ -189,8 +189,6 @@ var Filter = new function(){
 
 var Notes = new function(){
 
-  var $shownNotes = $([]);
-
   function noteSatisfiesFilter($note){
     var tags = $note.find("a.note_tag").map(Maps.getText).get();
     return $(Filter.tags).all(function(tag){
@@ -198,23 +196,16 @@ var Notes = new function(){
     });
   }
 
-  function updateCommon(){
-    $shownNotes.hide().removeClass("selected");
-    $shownNotes = $([]);
-  }
-
   this.updateForSelectedTag = function(tag){
-    updateCommon();
 
     /*
      * Collect all notes to hide in single jQuery object.
      *
      * If we hide a note as soon as find it in the loop,
      * Opera browser tries to update page to reflect DOM changes
-     * everytime (and does this sloooooow).
-     *
-     * On the other side, this collecting slows down other browsers,
-     * so it worth looking for a better solution.
+     * everytime (and does this sloooooow).  On the other side,
+     * this collecting slows down other browsers, so it worth
+     * looking for a better solution.
      */
     var $hide = $([]);
     $("div.note:visible").each(function(){
@@ -222,23 +213,25 @@ var Notes = new function(){
       if (! $this.find("a.note_tag").any(Predicates.hasText(tag)))
         $hide = $hide.add($this);
     });
-    $hide.hide();
+    $hide.removeClass("selected").hide();
 
     $("div.note a.note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
   };
 
   this.updateForDeselectedTag = function(tag){
-    updateCommon();
-
     if (Filter.isEmpty()){
-      $("div.note:visible a.note_tag").removeClass("chosen_tag");
-      $("div.note:hidden").show();
+      $("div.note a.note_tag").removeClass("chosen_tag");
+      $("div.note").removeClass("selected").show();
       return;
     }
 
     $("div.note:hidden").each(function(){
       if (noteSatisfiesFilter($(this)))
         $(this).show();
+    });
+    $("div.selected").each(function(){
+      if (noteSatisfiesFilter($(this)))
+        $(this).removeClass("selected");
     });
 
     $("div.note a.note_tag").filter(Predicates.hasText(tag)).removeClass("chosen_tag");
@@ -249,10 +242,8 @@ var Notes = new function(){
    * updateForSelectedTag() and updateForDeselectedTag().
    */
   this.update = function(){
-    updateCommon();
-
     $("div.note").each(function(){
-      $(this).toggle(noteSatisfiesFilter($(this)));
+      $(this).removeClass("selected").toggle(noteSatisfiesFilter($(this)));
     });
 
     $("div.note a.note_tag").each(function(){
@@ -271,10 +262,7 @@ var Notes = new function(){
    * be removed.
    */
   this.showNote = function($note){
-    if ($note.is(":hidden")){
-      $shownNotes = $shownNotes.add($note);
-      $note.addClass("selected").show();
-    }
+    $note.filter(":hidden").addClass("selected").show();
   };
 
 }();
