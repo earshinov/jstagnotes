@@ -81,6 +81,23 @@ var Maps = {
   }
 };
 
+/* --- Miscellaneous functions ---------------------------------------------- */
+
+var cachedNotesBlockHeight = null;
+function updateNotesBlockHeight(){
+  var $notes = $('#notes');
+  if (cachedNotesBlockHeight === null){
+    var $wrapper = $('#wrap');
+    cachedNotesBlockHeight =
+      - $('h1').outerHeight(true)
+      - ($wrapper.outerHeight(true) - $wrapper.height())
+      - ($notes.outerHeight(true) - $notes.height());
+  }
+  $notes.css('height', cachedNotesBlockHeight
+    + $(window).height()
+    - $('#control').outerHeight(true));
+}
+
 /* --- Internationalization ------------------------------------------------- */
 
 var L10N = L10N || {};
@@ -175,7 +192,7 @@ var Cloud = new function(){
 
     $switches.click(function(){
       selectedIndex = SWITCH_IDS.indexOf($(this).attr("id"));
-      switchBlock(selectedIndex);
+      switchBlock(selectedIndex) && updateNotesBlockHeight();
       return false;
     });
   });
@@ -264,6 +281,7 @@ var Cloud = new function(){
       $("#select_tag").css("width", "auto");
 
     temporarilySwitchBlock();
+    updateNotesBlockHeight();
 
     if (TestOptions.test)
       console.timeEnd("Cloud.recalculate");
@@ -467,7 +485,11 @@ function header(){
 }
 
 function footer(){
-  document.write("</div></div>");
+  /* In Opera the bottom margin of the last note is ignored (see
+   * http://dev.opera.com/forums/topic/789152). IE8 ignores both the margin
+   * and the bottom padding of the container. To ensure the gap after the
+   * last note is properly calculated, insert a dummy empty div. */
+  document.write("<div style='padding-top: 1px; margin-top: -1px;'></div></div></div>");
 }
 
 $(document).ready(function(){
@@ -503,6 +525,8 @@ $(document).ready(function(){
     }, TestOptions.delay);
   }
 
+  var $notes = $("#notes");
+
   /* The main initialisation function */
   function init(){
     basicInit();
@@ -512,6 +536,13 @@ $(document).ready(function(){
 
   function basicInit(){
     Cloud.recalculate();
+
+    var resizeHandlerTimer = null;
+    $(window).resize(function(){
+      if (resizeHandlerTimer !== null)
+        clearTimeout(resizeHandlerTimer);
+      resizeHandlerTimer = setTimeout(updateNotesBlockHeight, 400);
+    });
   }
 
   function bindEventHandlers(){
@@ -532,18 +563,25 @@ $(document).ready(function(){
 
     $(".note_tag").live("click", function(){
       var $this = $(this);
+      function getReferenceOffset(){
+        return $notes.scrollTop() + $this.offset().top;
+      }
 
       var restoreScroll = $this.parent().is('.tags');
       var prevScroll;
       var prevOffset;
       if (restoreScroll){
-        prevScroll = $(window).scrollTop();
-        prevOffset = $this.offset().top;
+        prevScroll = $notes.scrollTop();
+        prevOffset = getReferenceOffset();
       }
 
       Filter.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
+
+      var scrollPos = 0;
       if (restoreScroll)
-        $(window).scrollTop(prevScroll + $this.offset().top - prevOffset);
+        scrollPos = prevScroll + (getReferenceOffset() - prevOffset);
+      $notes.scrollTop(scrollPos);
+
       return false;
     });
 

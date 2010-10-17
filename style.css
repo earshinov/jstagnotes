@@ -82,32 +82,22 @@ html {
 }
 
 @media screen {
-  html {
+  html, body {
     height: 100%;
   }
   body {
-    min-height: 100%;
     margin: 0 auto;
-    border-left: 1px solid Gainsboro;
-    border-right: 1px solid Gainsboro;
     padding-left: 10px;
     padding-right: 10px;
-    max-width: 698px;
+    max-width: 700px;
   }
   * html body {
-    height: 100%;
     width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
   }
 }
 
 #wrap {
   padding-top: 10px;
-}
-@media screen {
-  #wrap {
-    /* necessary when body has borders */
-    padding-bottom: 1px;
-  }
 }
 
 h1 {
@@ -186,10 +176,10 @@ a.note_tag.chosen_tag {
   color: #333333;
 }
 
-/* --- Tag cloud and filter decoration */
+/* --- Page blocks */
 
 #control {
-  margin-bottom: 20px; /* margin-top is not needed as margin-bottom for <h1> is set */
+  margin-bottom: 10px;
   border: 1px Solid FireBrick;
   padding: 5px;
 }
@@ -238,6 +228,15 @@ a.note_tag.chosen_tag {
 #filter a.note_tag {
   /* separate chosen tags from the clear button */
   margin-right: 5px;
+}
+
+@media screen {
+  #notes {
+    overflow: auto;
+    border: 1px solid Gainsboro;
+    padding: 0 10px;
+    margin-bottom: 10px;
+  }
 }
 
 /* --- Note frame */
@@ -386,9 +385,9 @@ pre {
      * If user makes his browser's window too small, preformatted blocks will
      * surprise him. It's his fault anyway that he uses IE6.
      *
-     * width: expression(this.width > 674 ? "674px" : this.width);
+     * width: expression(this.width > 652 ? "652px" : this.width);
      */
-    _width: 674px;
+    _width: 652px;
 
     max-height: 500px;
     *height: expression((this.scrollHeight > 500) ? "500px" : "auto");
