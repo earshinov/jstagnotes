@@ -1,6 +1,8 @@
 //
 // Requirements:
-// - jQuery (http://jquery.com/)
+// - jQuery ≥ 1.4 (http://jquery.com/)
+// - jQuery BBQ: Back Button and Query Library (http://benalman.com/code/projects/jquery-bbq/)
+// - jQuery.ScrollTo plugin (http://flesler.blogspot.com/2007/10/jqueryscrollto.html)
 //
 
 var TestOptions = {
@@ -247,6 +249,7 @@ var Filter = new function(){
     $(tagString(tag)).insertBefore($clear);
     $filter.show();
 
+    $.bbq.pushState({ tags: this.tags });
     if (TestOptions.test)
       console.time("Notes.updateForSelectedTag");
     Notes.updateForSelectedTag(tag);
@@ -262,6 +265,7 @@ var Filter = new function(){
     if (this.isEmpty())
       $filter.hide();
 
+    $.bbq.pushState({ tags: this.tags });
     if (TestOptions.test)
       console.time("Notes.updateForDeselectedTag");
     Notes.updateForDeselectedTag(tag);
@@ -289,6 +293,7 @@ var Filter = new function(){
       });
     }
 
+    $.bbq.pushState({ tags: this.tags });
     Notes.update();
     Cloud.recalculate();
     return true;
@@ -459,7 +464,21 @@ $(document).ready(function(){
   }
 
   function basicInit(){
-    Cloud.recalculate();
+    var lastTarget;
+    var init = true;
+    $(window).bind("hashchange", function(event){
+
+      if (!Filter.setTags(event.getState("tags") || []) && init)
+        /* Initialize the tag cloud if it wasn't already done by Filter */
+        Cloud.recalculate();
+
+      var target = event.getState("anchor");
+      if (target && target !== lastTarget)
+        $.scrollTo("#" + target);
+      lastTarget = target;
+
+    }).trigger("hashchange");
+    init = false;
   }
 
   function bindEventHandlers(){
@@ -495,15 +514,11 @@ $(document).ready(function(){
       return false;
     });
 
-    $("a[href^=#][href!=#]").each(function(){
-      var $this = $(this);
-      var $note = $($this.attr("href"));
-      if ($note.is(".note")){
-        $this.click(function(){
-          Notes.showNote($note);
-          /* propagade the event further so that we actually follow the link */
-        });
-      }
+    $("a[href^=#][href!=#]").click(function(){
+      var href = $(this).attr("href");
+      $.bbq.pushState({ "anchor": href.substr(1) });
+      $.scrollTo(href);
+      return false;
     });
   }
 
