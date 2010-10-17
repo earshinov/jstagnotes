@@ -70,30 +70,6 @@ html, body {
   padding: 0;
 }
 
-@media screen {
-  html {
-    height: 100%;
-  }
-  body {
-    margin: 0 auto;
-    padding: 0 10px;
-    max-width: 720px;
-    min-height: 100%;
-
-    /*
-     * Prevent the bottom margin of the last note
-     * from popping out of the <body>.
-     */
-    padding-bottom: 1px;
-  }
-  * html body {
-    width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
-    height: 100%;
-  }
-}
-
-/* --- Page decoration */
-
 html {
   background-color: White;
   color: DimGray;
@@ -106,20 +82,37 @@ html {
 }
 
 @media screen {
+  html {
+    height: 100%;
+  }
   body {
+    min-height: 100%;
+    margin: 0 auto;
     border-left: 1px solid Gainsboro;
     border-right: 1px solid Gainsboro;
+    padding-left: 10px;
+    padding-right: 10px;
+    max-width: 698px;
+  }
+  * html body {
+    height: 100%;
+    width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
+  }
+}
+
+#wrap {
+  padding-top: 10px;
+}
+@media screen {
+  #wrap {
+    /* necessary when body has borders */
+    padding-bottom: 1px;
   }
 }
 
 h1 {
-  /*
-   * Adjust top padding instead of margin as margin pop out of <body>.
-   * There are other solutions.
-   */
   font-size: 1.5em;
   font-weight: normal;
-  padding: 10px 0 0;
   margin: 0 0 10px;
   text-align: center;
 }

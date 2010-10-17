@@ -382,24 +382,25 @@ var Notes = new function(){
 
 function header(){
   document.write(
-    "<h1>" + document.title + "</h1>\n" +
-    "<div id='control'>\n" +
-    "  <div id='cloud'>\n" +
-    "    " + I18N.tr("Tags") + ":\n" +
-    "    <a href='#' id='toggle_tags' class='js_link'>" + I18N.tr("Hide") +"</a>\n" +
-    "    <a href='#' id='toggle_popular_tags' class='js_link active_link'>" + I18N.tr("Popular") +"</a>\n" +
-    "    <a href='#' id='toggle_all_tags' class='js_link'>" + I18N.tr("All") +"</a>\n" +
-    "    <div id='popular_tags'></div>\n" +
-    "    <div id='all_tags' style='display: none'></div>\n" +
-    "  </div>\n" +
-    "  <div>\n" +
-    "    <label for='select_tag'>" + I18N.tr("Add from list") + ":</label>\n" +
-    "    <select id='select_tag'>\n" +
-    "      <option></option>\n" +
-    "    </select>\n" +
-    "  </div>\n" +
-    "  <div id='filter' style='display: none'>\n" +
-    "    " + I18N.tr("Filter") + ":" +
+    "<div id='wrap'>\n" +
+    "  <h1>" + document.title + "</h1>\n" +
+    "  <div id='control'>\n" +
+    "    <div id='cloud'>\n" +
+    "      " + I18N.tr("Tags") + ":\n" +
+    "      <a href='#' id='toggle_tags' class='js_link'>" + I18N.tr("Hide") +"</a>\n" +
+    "      <a href='#' id='toggle_popular_tags' class='js_link active_link'>" + I18N.tr("Popular") +"</a>\n" +
+    "      <a href='#' id='toggle_all_tags' class='js_link'>" + I18N.tr("All") +"</a>\n" +
+    "      <div id='popular_tags'></div>\n" +
+    "      <div id='all_tags' style='display: none'></div>\n" +
+    "    </div>\n" +
+    "    <div>\n" +
+    "      <label for='select_tag'>" + I18N.tr("Add from list") + ":</label>\n" +
+    "      <select id='select_tag'>\n" +
+    "        <option></option>\n" +
+    "      </select>\n" +
+    "    </div>\n" +
+    "    <div id='filter' style='display: none'>\n" +
+    "      " + I18N.tr("Filter") + ":" +
       /*
        * Separate the label and the button with a single unbreakable space as IE6
        * ignores all ordinary space before buttons and thus sticks tags to the
@@ -407,13 +408,13 @@ function header(){
        * browsers will display several space characters.
        */
     "&nbsp;<button id='clear_filter'>" + I18N.tr("Clear") + "</button>\n" +
+    "    </div>\n" +
     "  </div>\n" +
-    "</div>\n" +
-    "<div id='notes'>");
+    "  <div id='notes'>");
 }
 
 function footer(){
-  document.write("</div>");
+  document.write("</div></div>");
 }
 
 $(document).ready(function(){
