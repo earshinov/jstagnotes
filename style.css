@@ -137,6 +137,15 @@ h1 {
   margin: 0 0 10px;
   text-align: center;
 }
+html.flexboxes h1 {
+  /* takes too much space */
+  display: none;
+}
+@media print {
+  html.flexboxes h1 {
+    display: block;
+  }
+}
 
 /* --- Other elements --- */
 
