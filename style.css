@@ -105,6 +105,14 @@ h1 {
   font-weight: normal;
   margin: 0 0 10px;
   text-align: center;
+
+  /* takes too much space */
+  display: none;
+}
+@media print {
+  h1 {
+    display: block;
+  }
 }
 
 /* --- Other elements --- */

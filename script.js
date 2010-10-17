@@ -89,7 +89,7 @@ function updateNotesBlockHeight(){
   if (cachedNotesBlockHeight === null){
     var $wrapper = $('#wrap');
     cachedNotesBlockHeight =
-      - $('h1').outerHeight(true)
+      - $('h1:visible').outerHeight(true)
       - ($wrapper.outerHeight(true) - $wrapper.height())
       - ($notes.outerHeight(true) - $notes.height());
   }
