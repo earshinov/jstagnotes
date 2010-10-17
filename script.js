@@ -472,6 +472,8 @@ function footer(){
 
 $(document).ready(function(){
 
+  var hasFlexboxes = false;
+
   if (!TestOptions.test)
     init();
   else{
@@ -505,9 +507,34 @@ $(document).ready(function(){
 
   /* The main initialisation function */
   function init(){
+    checkFlexboxes();
     basicInit();
     bindEventHandlers();
     initPrinting();
+  }
+
+  /*
+   * Check whether CSS3 flexboxes are supported.  If they are, but the browser
+   * is Firefox, ignore them as, unfortunately, I couldn't manage to get use of
+   * Firefox's implementation of Flexboxes so that page elements (mainly
+   * preformatted blocks within notes) are correctly sized.
+   */
+  function checkFlexboxes(){
+    if (!$.browser.mozilla){
+      var $div = $(document.createElement("div"));
+      try{
+        if ($div.css("display", "box").css("display") === "box" ||
+            //$div.css("display", "-moz-box").css("display") == "-moz-box" ||
+            $div.css("display", "-webkit-box").css("display") == "-webkit-box"){
+          hasFlexboxes = true;
+          $("html").addClass("flexboxes");
+        }
+      }
+      catch(e){
+        /* IE throws an exception when we set an invalid value of CSS property */
+      }
+      $div.remove();
+    }
   }
 
   function basicInit(){
@@ -533,17 +560,29 @@ $(document).ready(function(){
     $(".note_tag").live("click", function(){
       var $this = $(this);
 
+      var $scrollee = hasFlexboxes ? $("#notes") : $(window);
+      function getReferenceOffset(){
+        var ret = $this.offset().top;
+        if (hasFlexboxes)
+          ret += $scrollee.scrollTop();
+        return ret;
+      }
+
       var restoreScroll = $this.parent().is('.tags');
       var prevScroll;
       var prevOffset;
       if (restoreScroll){
-        prevScroll = $(window).scrollTop();
-        prevOffset = $this.offset().top;
+        prevScroll = $scrollee.scrollTop();
+        prevOffset = getReferenceOffset();
       }
 
       Filter.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
+
+      var scrollPos = 0;
       if (restoreScroll)
-        $(window).scrollTop(prevScroll + $this.offset().top - prevOffset);
+        scrollPos = prevScroll + (getReferenceOffset() - prevOffset);
+      $scrollee.scrollTop(scrollPos);
+
       return false;
     });
 
