@@ -58,6 +58,14 @@ jQuery.fn.all = function(fn){
   return ret;
 };
 
+jQuery.fn.$indexOf = function(selectorOrElement){
+  var $this = $(this);
+  var $element = typeof selectorOrElement === 'string'
+    ? $this.filter(selectorOrElement)
+    : $(selectorOrElement);
+  return $this.index($element);
+};
+
 var Predicates = {
   hasText: function(text){ return function(){
     return $(this).text() === text;
@@ -67,6 +75,9 @@ var Predicates = {
 var Maps = {
   getText: function(){
     return $(this).text();
+  },
+  fromId: function(id){
+    return document.getElementById(id);
   }
 };
 
@@ -154,6 +165,46 @@ var TagsCache = new function(){
 
 var Cloud = new function(){
 
+  var BLOCK_IDS = ["popular_tags", "all_tags", undefined];
+  var SWITCH_IDS = ["toggle_popular_tags", "toggle_all_tags", "toggle_tags"];
+
+  var currentIndex, selectedIndex;
+  $(function(){
+    var $switches = $($.map(SWITCH_IDS, Maps.fromId));
+    currentIndex = selectedIndex = $switches.$indexOf(".active_link");
+
+    $switches.click(function(){
+      selectedIndex = SWITCH_IDS.indexOf($(this).attr("id"));
+      switchBlock(selectedIndex);
+      return false;
+    });
+  });
+
+  function switchBlock(index){
+    if (index === currentIndex)
+      return false;
+    $(Maps.fromId(SWITCH_IDS[currentIndex])).removeClass("active_link");
+    $(Maps.fromId(SWITCH_IDS[index])).addClass("active_link");
+
+    var blockId = BLOCK_IDS[currentIndex];
+    if (blockId !== undefined)
+      $(Maps.fromId(blockId)).hide();
+
+    blockId = BLOCK_IDS[index];
+    if (blockId !== undefined)
+      $(Maps.fromId(blockId)).show();
+
+    currentIndex = index;
+    return true;
+  }
+
+  function temporarilySwitchBlock(){
+    var $blocks = $($.map(BLOCK_IDS.slice(selectedIndex), Maps.fromId));
+    var index = $blocks.$indexOf(":not(:empty)");
+    index = index === -1 ? BLOCK_IDS.length - 1 : index + selectedIndex;
+    return switchBlock(index);
+  }
+
   function addTag(tag, size, count){
     var $tags = $("#all_tags");
     if (size < 3)
@@ -168,7 +219,7 @@ var Cloud = new function(){
     if (TestOptions.test)
       console.time("Cloud.recalculate");
 
-    $("#all_tags, #popular_tags").empty();
+    $($.map(BLOCK_IDS, Maps.fromId)).empty();
     $("#select_tag").children(":not(:empty)").remove();
 
     var tagsCount = {};
@@ -211,6 +262,8 @@ var Cloud = new function(){
     /* IE does not automatically update select's width when the set of options is changed */
     if ($.browser.msie)
       $("#select_tag").css("width", "auto");
+
+    temporarilySwitchBlock();
 
     if (TestOptions.test)
       console.timeEnd("Cloud.recalculate");
@@ -454,7 +507,6 @@ $(document).ready(function(){
   function init(){
     basicInit();
     bindEventHandlers();
-    bindTagCloudEventHandlers();
     initPrinting();
   }
 
@@ -504,48 +556,6 @@ $(document).ready(function(){
           /* propagade the event further so that we actually follow the link */
         });
       }
-    });
-  }
-
-  function bindTagCloudEventHandlers(){
-
-    $("#toggle_tags").click(function(){
-      if (!$(this).hasClass("active_link")){
-
-        $("#toggle_popular_tags").removeClass("active_link");
-        $("#toggle_all_tags").removeClass("active_link");
-        $(this).addClass("active_link");
-
-        $("#all_tags").hide();
-        $("#popular_tags").hide();
-      }
-      return false;
-    });
-
-    $("#toggle_popular_tags").click(function(){
-      if (!$(this).hasClass("active_link")){
-
-        $("#toggle_tags").removeClass("active_link");
-        $("#toggle_all_tags").removeClass("active_link");
-        $(this).addClass("active_link");
-
-        $("#all_tags").hide();
-        $("#popular_tags").show();
-      }
-      return false;
-    });
-
-    $("#toggle_all_tags").click(function(){
-      if (!$(this).hasClass("active_link")){
-
-        $("#toggle_tags").removeClass("active_link");
-        $("#toggle_popular_tags").removeClass("active_link");
-        $(this).addClass("active_link");
-
-        $("#popular_tags").hide();
-        $("#all_tags").show();
-      }
-      return false;
     });
   }
 
