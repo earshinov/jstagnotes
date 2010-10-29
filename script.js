@@ -166,7 +166,7 @@ var Cloud = new function(){
     var tagsArray = []; // for sorting
     var notesCountPerTag_max = Number.MIN_VALUE;
 
-    $("div.note:visible a.note_tag").each(function(){
+    $(".note:visible .note_tag").each(function(){
       var tag = $(this).text();
       if (!tagsCount.hasOwnProperty(tag)){
         tagsCount[tag] = 1;
@@ -292,7 +292,7 @@ var Filter = new function(){
 var Notes = new function(){
 
   function noteSatisfiesFilter($note){
-    var tags = $note.find("a.note_tag").map(Maps.getText).get();
+    var tags = $note.find(".note_tag").map(Maps.getText).get();
     return $(Filter.tags).all(function(tag){
       return tags.indexOf(tag) !== -1;
     });
@@ -310,41 +310,41 @@ var Notes = new function(){
      * looking for a better solution.
      */
     var $hide = $([]);
-    $("div.note:visible").each(function(){
+    $(".note:visible").each(function(){
       var $this = $(this);
-      if (! $this.find("a.note_tag").any(Predicates.hasText(tag)))
+      if (! $this.find(".note_tag").any(Predicates.hasText(tag)))
         $hide = $hide.add($this);
     });
     $hide.removeClass("selected").hide();
 
-    $("div.note a.note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
+    $("#notes .note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
   };
 
   this.updateForDeselectedTag = function(tag){
     if (Filter.isEmpty()){
-      $("div.note a.note_tag").removeClass("chosen_tag");
-      $("div.note").removeClass("selected").show();
+      $("#notes .note_tag").removeClass("chosen_tag");
+      $(".note").removeClass("selected").show();
       return;
     }
 
-    $("div.note:hidden").each(function(){
+    $(".note:hidden").each(function(){
       if (noteSatisfiesFilter($(this)))
         $(this).show();
     });
-    $("div.selected").each(function(){
+    $(".selected").each(function(){
       if (noteSatisfiesFilter($(this)))
         $(this).removeClass("selected");
     });
 
-    $("div.note a.note_tag").filter(Predicates.hasText(tag)).removeClass("chosen_tag");
+    $("#notes .note_tag").filter(Predicates.hasText(tag)).removeClass("chosen_tag");
   };
 
   this.update = function(){
-    $("div.note").each(function(){
+    $(".note").each(function(){
       $(this).removeClass("selected").toggle(noteSatisfiesFilter($(this)));
     });
 
-    $("div.note a.note_tag").each(function(){
+    $("#notes .note_tag").each(function(){
       $(this).toggleClass("chosen_tag", Filter.isTagChosen($(this).text()));
     });
   };
@@ -464,7 +464,7 @@ $(document).ready(function(){
       Filter.setTags([]);
     });
 
-    $("a.note_tag").live("click", function(){
+    $(".note_tag").live("click", function(){
       var $this = $(this);
 
       var restoreScroll = $this.parent().is('.tags');
@@ -484,7 +484,7 @@ $(document).ready(function(){
     $("a[href^=#][href!=#]").each(function(){
       var $this = $(this);
       var $note = $($this.attr("href"));
-      if ($note.is("div.note")){
+      if ($note.is(".note")){
         $this.click(function(){
           Notes.showNote($note);
           /* propagade the event further so that we actually follow the link */
