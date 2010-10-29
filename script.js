@@ -174,7 +174,16 @@ var Cloud = new function(){
     var tagsCount = {};
     var countMax = 1;
 
-    $(".note:visible").each(function(){
+    $(".note").each(function(){
+
+      /* We don't use ".note:visible" selector as it checks element's dimensions,
+       * not the display mode.  At least in current Firefox getting dimensions
+       * waits until browser completes reflow process.  It is quite apparent
+       * when you select a single tag and then deselect it; with this
+       * optimisation function completes two times faster */
+      if (this.style.display === "none")
+        return; // continue
+
       $.each(TagsCache.getNoteTags($(this)), function(i, tag){
         if (!tagsCount.hasOwnProperty(tag))
           tagsCount[tag] = 1;
