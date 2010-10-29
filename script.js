@@ -1,36 +1,7 @@
-/*
-
-[ REQUIREMENTS ]
-
-jQuery (http://jquery.com/)
-
-[ OPTIMIZATION ]
-
-If this script runs slowly, you may apply the following optiomizations:
-
-0. Cache some DOM elements
-
-1. Selection of a note by tag is a very common operation, which is rather slow.
-   at the moment.
-
-   We need an associative array that maps a tag to a set of notes tagged
-   with this tag. Of course, tags means tag names here and notes means id's of
-   HTML elements corresponding to notes (i.e., elements which have 'note' class).
-
-   This associative array is simple to implement in JavaScript. The sets of notes
-   can be simulated with another associative arrays.
-
-   We need to build the array during our initialization. When user selects or
-   deselects a tag, we can use the array to determine which notes to show and
-   which ones to hide. That can be faster then iterating through notes
-   checking their tags (the way applied at the moment).
-
-2. Calculating tag's 'weight' in the tags cloud is also important.
-
-   We can use the same array. To calculate the weight of a tag we just need to
-   count the notes in the set the tag maps to, which are currently visible.
-
-*/
+//
+// Requirements:
+// - jQuery (http://jquery.com/)
+//
 
 var TestOptions = {
   test: false,
@@ -141,6 +112,44 @@ var I18N = new function(){
 
 }();
 
+/* --- Tags cache ----------------------------------------------------------- */
+
+var TagsCache = new function(){
+
+  var notes = []; // note ordinal -> array of tags
+  this.sortedTags = []; // tags sorted lexicographically
+
+  $(function(){
+    var counter = 0;
+    var tags = {}; // set of all tags, used for inserting unique values into sortedTags
+    $(".note").each(function(){
+
+      $(this).data("ordinal", counter);
+      var noteTags = [];
+      notes[counter] = noteTags;
+      counter++;
+
+      $(this).find(".note_tag").each(function(){
+        var tag = $(this).text();
+        noteTags.push(tag);
+        if (!tags.hasOwnProperty(tag)){
+          tags[tag] = 0; // any value
+          TagsCache.sortedTags.push(tag);
+        }
+      });
+    });
+
+    TagsCache.sortedTags.sort(function(a, b){
+      return a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase());
+    });
+  });
+
+  this.getNoteTags = function($note){
+    return notes[$note.data("ordinal")];
+  };
+
+}();
+
 /* --- Cloud ---------------------------------------------------------------- */
 
 var Cloud = new function(){
@@ -163,37 +172,28 @@ var Cloud = new function(){
     $("#select_tag").children(":not(:empty)").remove();
 
     var tagsCount = {};
-    var tagsArray = []; // for sorting
-    var notesCountPerTag_max = Number.MIN_VALUE;
+    var countMax = 1;
 
-    $(".note:visible .note_tag").each(function(){
-      var tag = $(this).text();
-      if (!tagsCount.hasOwnProperty(tag)){
-        tagsCount[tag] = 1;
-        tagsArray.push(tag);
-      }
-      else{
-        tagsCount[tag]++;
-        if (tagsCount[tag] > notesCountPerTag_max)
-          notesCountPerTag_max = tagsCount[tag];
-      }
+    $(".note:visible").each(function(){
+      $.each(TagsCache.getNoteTags($(this)), function(i, tag){
+        if (!tagsCount.hasOwnProperty(tag))
+          tagsCount[tag] = 1;
+        else{
+          var count = ++tagsCount[tag];
+          if (count > countMax)
+            countMax = count;
+        }
+      });
     });
 
-    var notesCountPerTag_min = Number.MAX_VALUE;
-    $.each(tagsCount, function(tag, count){
-      if (count < notesCountPerTag_min)
-        notesCountPerTag_min = count;
-    });
-    var notesCountPerTag_range = notesCountPerTag_max - notesCountPerTag_min + 1;
+    /* The proper formula is range = max - min + 1
+     * We don't bother finding min as it's most likely 1 in our case */
+    var countRange = countMax;
 
-    tagsArray.sort(function(a, b){
-      return a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase());
-    });
-
-    $.each(tagsArray, function(i, tag){
-      if (!Filter.isTagChosen(tag)){
-        var count = tagsCount[tag];
-        var percent = count / notesCountPerTag_range;
+    $.each(TagsCache.sortedTags, function(i, tag){
+      var count = tagsCount[tag];
+      if (count > 0 && !Filter.isTagChosen(tag)){
+        var percent = count / countRange;
         /* The numbers below were chosen a posteriori */
         addTag(tag, 3 - (percent > 0.1) - (percent > 0.3), count);
       }
@@ -292,14 +292,13 @@ var Filter = new function(){
 var Notes = new function(){
 
   function noteSatisfiesFilter($note){
-    var tags = $note.find(".note_tag").map(Maps.getText).get();
+    var tags = TagsCache.getNoteTags($note);
     return $(Filter.tags).all(function(tag){
       return tags.indexOf(tag) !== -1;
     });
   }
 
   this.updateForSelectedTag = function(tag){
-
     /*
      * Collect all notes to hide in single jQuery object.
      *
@@ -312,7 +311,7 @@ var Notes = new function(){
     var $hide = $([]);
     $(".note:visible").each(function(){
       var $this = $(this);
-      if (! $this.find(".note_tag").any(Predicates.hasText(tag)))
+      if (TagsCache.getNoteTags($this).indexOf(tag) === -1)
         $hide = $hide.add($this);
     });
     $hide.removeClass("selected").hide();
