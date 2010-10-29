@@ -32,6 +32,13 @@ If this script runs slowly, you may apply the following optiomizations:
 
 */
 
+var TestOptions = {
+  test: false,
+  firstTag: 'Windows',
+  secondTag: 'Linux',
+  delay: 4000
+};
+
 /* --- Utils ---------------------------------------------------------------- */
 
 if (Array.prototype.indexOf === undefined)
@@ -149,7 +156,8 @@ var Cloud = new function(){
   }
 
   this.recalculate = function(){
-    //console.profile();
+    if (TestOptions.test)
+      console.time("Cloud.recalculate");
 
     $("#all_tags, #popular_tags").empty();
     $("#select_tag").children(":not(:empty)").remove();
@@ -195,7 +203,8 @@ var Cloud = new function(){
     if ($.browser.msie)
       $("#select_tag").css("width", "auto");
 
-    //console.profileEnd();
+    if (TestOptions.test)
+      console.timeEnd("Cloud.recalculate");
   };
 
 }();
@@ -229,7 +238,12 @@ var Filter = new function(){
     $(tagString(tag)).insertBefore($clear);
     $filter.show();
 
+    if (TestOptions.test)
+      console.time("Notes.updateForSelectedTag");
     Notes.updateForSelectedTag(tag);
+    if (TestOptions.test)
+      console.timeEnd("Notes.updateForSelectedTag");
+
     Cloud.recalculate();
   };
 
@@ -239,7 +253,11 @@ var Filter = new function(){
     if (this.isEmpty())
       $filter.hide();
 
+    if (TestOptions.test)
+      console.time("Notes.updateForDeselectedTag");
     Notes.updateForDeselectedTag(tag);
+    if (TestOptions.test)
+      console.timeEnd("Notes.updateForDeselectedTag");
     Cloud.recalculate();
   };
 
@@ -386,10 +404,45 @@ function footer(){
 }
 
 $(document).ready(function(){
-  basicInit();
-  bindEventHandlers();
-  bindTagCloudEventHandlers();
-  initPrinting();
+
+  if (!TestOptions.test)
+    init();
+  else{
+    console.log("Test :: startup");
+    console.time("Total");
+    init();
+    console.timeEnd("Total");
+
+    window.setTimeout(function(){
+      console.log("Test :: add first tag");
+      Filter.addTag(TestOptions.firstTag);
+
+      window.setTimeout(function(){
+        console.log("Test :: add second tag");
+        Filter.addTag(TestOptions.secondTag);
+
+        window.setTimeout(function(){
+          console.log("Test :: remove first tag");
+          Filter.removeTag(TestOptions.firstTag);
+
+          window.setTimeout(function(){
+            console.log("Test :: remove second tag");
+            Filter.removeTag(TestOptions.secondTag);
+
+            console.log("Test :: finished");
+          }, TestOptions.delay);
+        }, TestOptions.delay);
+      }, TestOptions.delay);
+    }, TestOptions.delay);
+  }
+
+  /* The main initialisation function */
+  function init(){
+    basicInit();
+    bindEventHandlers();
+    bindTagCloudEventHandlers();
+    initPrinting();
+  }
 
   function basicInit(){
     Cloud.recalculate();
