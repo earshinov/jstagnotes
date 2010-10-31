@@ -377,28 +377,30 @@ pre {
 }
 @media screen {
   pre {
-    max-width: 696px;
+    /*
+     * For IE6 we must specify fixed width so that preformatted blocks do not
+     * push the right border of notes beyond the maximum width set with an
+     * expression (see the beginning of this file). For other browsers we
+     * have max-width which does not allow notes to extend too far horizontally.
+     *
+     * If user makes his browser's window too small, preformatted blocks will
+     * surprise him. It's his fault anyway that he uses IE6.
+     *
+     * width: expression(this.width > 674 ? "674px" : this.width);
+     */
+    _width: 674px;
+
+    max-height: 500px;
+    *height: expression((this.scrollHeight > 500) ? "500px" : "auto");
 
     /*
-     * For IE use fixed width.
-     * Otherwise "oveflow: auto" (see below) does not work.
-     * Learn fucking IE, dude!
-     *
-     * If user makes his browser's window too small,
-     * preformatted blocks will surprise him.
-     * It's his fault anyway that he uses IE6.
-     *
-     * width: expression(this.width > 694 ? "694px" : this.width);
+     * Max-width does not work properly here in IE8 (standards mode), so we
+     * disable it. Note that IE8 (standards mode) does not support expressions,
+     * so we can't limit the height at all.
      */
-    *width: 694px;
-  }
-}
-@media screen, handheld {
-  pre {
-    max-height: 500px;
-    overflow: auto;
+    max-height: none\0/;
 
-    *height: expression((this.scrollHeight > 500) ? "500px" : "auto");
+    overflow: auto;
 
     /*
      * add padding to make room for the scroll bar

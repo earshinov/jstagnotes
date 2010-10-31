@@ -90,34 +90,59 @@
     используя тэг <code>&lt;code&gt;</code>. Другой
     вариант - блок форматированного текста. Пример:</p>
     <pre>
+this.updateForSelectedTag = function(tag){
+  $(".note:visible").each(function(){
+    var $this = $(this);
+    if (TagsCache.getNoteTags($this).indexOf(tag) === -1)
+      $this.removeClass("selected").hide();
+  });
+
+  $("#notes .note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
+};
+
 this.updateForDeselectedTag = function(tag){
-
-if (Filter.isEmpty()){
-$("div.note:visible a.note_tag").removeClass("chosen_tag");
-$("div.note:hidden").show();
-return;
-}
-
-$("div.note:hidden").each(function(){
-var $tags = $(this).find("a.note_tag");
-for (var i = 0; i &lt; Filter.tags.length; i++){
-  if (! $tags.existsText(Filter.tags[i])){
+  if (Filter.isEmpty()){
+    $("#notes .note_tag").removeClass("chosen_tag");
+    $(".note").removeClass("selected").show();
     return;
   }
-}
-$(this).show();
-});
 
-$("div.note a.note_tag").select(
-function(){
-  return $(this).text() == tag;
-},
-function(){
-  $(this).removeClass("chosen_tag");
-}
-);
-}
+  $(".note:hidden").each(function(){
+    if (noteSatisfiesFilter($(this)))
+      $(this).show();
+  });
+  $(".selected").each(function(){
+    if (noteSatisfiesFilter($(this)))
+      $(this).removeClass("selected");
+  });
+
+  $("#notes .note_tag").filter(Predicates.hasText(tag)).removeClass("chosen_tag");
+};
+
+this.update = function(){
+  $(".note").each(function(){
+    $(this).removeClass("selected").toggle(noteSatisfiesFilter($(this)));
+  });
+
+  $("#notes .note_tag").each(function(){
+    $(this).toggleClass("chosen_tag", Filter.isTagChosen($(this).text()));
+  });
+};
 </pre>
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">демонстрация</a>
+    <a class="note_tag" href="#">pre</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">02.06.2009</div>
+    <div class="title">Длинный pre</div>
+  </div>
+  <div class="content">
+<pre>This is a very long line. This is a very long line. This is a very long line. This is a very long line.</pre>
   </div>
   <div class="tags">
     <a class="note_tag" href="#">демонстрация</a>
