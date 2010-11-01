@@ -316,14 +316,19 @@ var Notes = new function(){
      * everytime (and does this sloooooow).  On the other side,
      * this collecting slows down other browsers, so it worth
      * looking for a better solution.
+     *
+     * Don't use jQuery.add() as in jQuery 1.4.2, probably because of the sort
+     * by document order introduced in 1.4, it is awfully slow in (at lease an
+     * old version of) Chrome causing the execution time of this function to
+     * increase ~100 times.
      */
-    var $hide = $([]);
+    var domHide = [];
     $(".note:visible").each(function(){
       var $this = $(this);
       if (TagsCache.getNoteTags($this).indexOf(tag) === -1)
-        $hide = $hide.add($this);
+        domHide.push(this);
     });
-    $hide.removeClass("selected").hide();
+    $(domHide).removeClass("selected").hide();
 
     $("#notes .note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
   };
