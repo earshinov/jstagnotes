@@ -60,6 +60,14 @@ jQuery.fn.all = function(fn){
   return ret;
 };
 
+jQuery.fn.$indexOf = function(selectorOrElement){
+  var $this = $(this);
+  var $element = typeof selectorOrElement === 'string'
+    ? $this.filter(selectorOrElement)
+    : $(selectorOrElement);
+  return $this.index($element);
+};
+
 var Predicates = {
   hasText: function(text){ return function(){
     return $(this).text() === text;
@@ -69,6 +77,9 @@ var Predicates = {
 var Maps = {
   getText: function(){
     return $(this).text();
+  },
+  fromId: function(id){
+    return document.getElementById(id);
   }
 };
 
@@ -156,6 +167,61 @@ var TagsCache = new function(){
 
 var Cloud = new function(){
 
+  var USER_BLOCK_IDS = ["popular", "all", "hide"];
+  var BLOCK_IDS = ["popular_tags", "all_tags", undefined];
+  var SWITCH_IDS = ["toggle_popular_tags", "toggle_all_tags", "toggle_tags"];
+
+  var selectedIndex, currentIndex, defaultIndex;
+  $(function(){
+    var $switches = $($.map(SWITCH_IDS, Maps.fromId));
+    selectedIndex = currentIndex = defaultIndex = $switches.$indexOf(".active_link");
+
+    $switches.click(function(){
+      selectedIndex = SWITCH_IDS.indexOf($(this).attr("id"));
+      switchBlock(selectedIndex);
+      State.sync();
+      return false;
+    });
+  });
+
+  function switchBlock(index){
+    if (index === currentIndex)
+      return false;
+    $(Maps.fromId(SWITCH_IDS[currentIndex])).removeClass("active_link");
+    $(Maps.fromId(SWITCH_IDS[index])).addClass("active_link");
+
+    var blockId = BLOCK_IDS[currentIndex];
+    if (blockId !== undefined)
+      $(Maps.fromId(blockId)).hide();
+
+    blockId = BLOCK_IDS[index];
+    if (blockId !== undefined)
+      $(Maps.fromId(blockId)).show();
+
+    currentIndex = index;
+    return true;
+  }
+
+  function temporarilySwitchBlock(){
+    var $blocks = $($.map(BLOCK_IDS.slice(selectedIndex), Maps.fromId));
+    var index = $blocks.$indexOf(":not(:empty)");
+    index = index === -1 ? BLOCK_IDS.length - 1 : index + selectedIndex;
+    return switchBlock(index);
+  }
+
+  this.getSelectedTagBlock = function(){
+    return selectedIndex === defaultIndex ? null : USER_BLOCK_IDS[selectedIndex];
+  };
+
+  this.setSelectedTagBlock = function(id){
+    var index = id === undefined ? defaultIndex : USER_BLOCK_IDS.indexOf(id);
+    if (index === -1 || index === selectedIndex)
+      return false;
+    selectedIndex = index;
+    temporarilySwitchBlock();
+    return true;
+  };
+
   function addTag(tag, size, count){
     var $tags = $("#all_tags");
     if (size < 3)
@@ -170,7 +236,7 @@ var Cloud = new function(){
     if (TestOptions.test)
       console.time("Cloud.recalculate");
 
-    $("#all_tags, #popular_tags").empty();
+    $($.map(BLOCK_IDS, Maps.fromId)).empty();
     $("#select_tag").children(":not(:empty)").remove();
 
     var tagsCount = {};
@@ -213,6 +279,8 @@ var Cloud = new function(){
     /* IE does not automatically update select's width when the set of options is changed */
     if ($.browser.msie)
       $("#select_tag").css("width", "auto");
+
+    temporarilySwitchBlock();
 
     if (TestOptions.test)
       console.timeEnd("Cloud.recalculate");
@@ -399,6 +467,15 @@ var State = new function(){
   }
 
   /*
+   * Functions for managing selected tag block.
+   * Selected tag block is remembered in Cloud, not in this object.
+   */
+
+  this.setSelectedTagBlock = function(id){
+    return Cloud.setSelectedTagBlock(id);
+  };
+
+  /*
    * Functions for managing tags.
    * Actually what is written to history is Filter.tags array, and these
    * functions just provide additional abstraction level above Filter.
@@ -514,6 +591,9 @@ var State = new function(){
     };
     if (anchor !== null)
       state["anchor"] = anchor;
+    var tagBlock = Cloud.getSelectedTagBlock();
+    if (tagBlock !== null)
+      state["tagBlock"] = tagBlock;
 
     var prevScroll;
     if (Filter.tags.length === 0 && selected.length === 0 && anchor === null)
@@ -605,13 +685,13 @@ $(document).ready(function(){
   function init(){
     basicInit();
     bindEventHandlers();
-    bindTagCloudEventHandlers();
     initPrinting();
   }
 
   function basicInit(){
     var init = true;
     $(window).bind("hashchange", function(event){
+      State.setSelectedTagBlock(event.getState("tagBlock"));
       if (!State.setTags(event.getState("tags")) && init)
         /* Initialize the tag cloud if it wasn't already done by State */
         Cloud.recalculate();
@@ -662,48 +742,6 @@ $(document).ready(function(){
     $("a[href^=#][href!=#]").click(function(){
       State.setAnchor($(this).attr("href").substr(1), true);
       State.sync();
-      return false;
-    });
-  }
-
-  function bindTagCloudEventHandlers(){
-
-    $("#toggle_tags").click(function(){
-      if (!$(this).hasClass("active_link")){
-
-        $("#toggle_popular_tags").removeClass("active_link");
-        $("#toggle_all_tags").removeClass("active_link");
-        $(this).addClass("active_link");
-
-        $("#all_tags").hide();
-        $("#popular_tags").hide();
-      }
-      return false;
-    });
-
-    $("#toggle_popular_tags").click(function(){
-      if (!$(this).hasClass("active_link")){
-
-        $("#toggle_tags").removeClass("active_link");
-        $("#toggle_all_tags").removeClass("active_link");
-        $(this).addClass("active_link");
-
-        $("#all_tags").hide();
-        $("#popular_tags").show();
-      }
-      return false;
-    });
-
-    $("#toggle_all_tags").click(function(){
-      if (!$(this).hasClass("active_link")){
-
-        $("#toggle_tags").removeClass("active_link");
-        $("#toggle_popular_tags").removeClass("active_link");
-        $(this).addClass("active_link");
-
-        $("#popular_tags").hide();
-        $("#all_tags").show();
-      }
       return false;
     });
   }
