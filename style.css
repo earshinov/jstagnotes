@@ -8,6 +8,10 @@
  * Do not use <pre> anywhere with additional left offset (e.g., in lists).
  * This is because preformatted blocks have fixed width in IE, so in IE
  * <pre>'s contents will pop out of the right end of its parent...
+ *
+ * If the page contains large elements like images or tables, they can pop out
+ * of the right body border if browser window is so small that the elements'
+ * size can't be reduced accordingly.
  */
 
 /*
@@ -61,13 +65,6 @@
 
 /* --- Page frame  */
 
-  /*
-   * This markup has a disadvantage. If the page contains large elements
-   * like images or tables, they can pop out of the right body border
-   * if browser window is so small that the elements' size can't be
-   * reduced accordingly.
-   */
-
 html, body {
   margin: 0;
   padding: 0;
@@ -83,10 +80,10 @@ html, body {
     max-width: 720px;
     min-height: 100%;
 
-      /*
-       * Prevent the bottom margin of the last note
-       * from popping out of the <body>.
-       */
+    /*
+     * Prevent the bottom margin of the last note
+     * from popping out of the <body>.
+     */
     padding-bottom: 1px;
   }
   * html body {
@@ -116,10 +113,10 @@ html {
 }
 
 h1 {
-    /*
-     * Adjust top padding instead of margin as margin pop out of <body>.
-     * There are other solutions.
-     */
+  /*
+   * Adjust top padding instead of margin as margin pop out of <body>.
+   * There are other solutions.
+   */
   font-size: 1.5em;
   font-weight: normal;
   padding: 10px 0 0;
@@ -188,10 +185,10 @@ a.tag_size_3 {
   color: DimGray;
 }
 
-  /*
-   * If one writes 'a.chosen_tag' instead of 'a.note_tag.chosen_tag',
-   * IE leaves styles from 'a.note_tag' (see above) in notes.
-   */
+/*
+ * If one writes 'a.chosen_tag' instead of 'a.note_tag.chosen_tag',
+ * IE leaves styles from 'a.note_tag' (see above) in notes.
+ */
 a.note_tag.chosen_tag {
   color: #333333;
 }
@@ -209,30 +206,30 @@ a.note_tag.chosen_tag {
   margin: 5px;
   padding: 0;
 
-    /*
-     * It's worth increasing line-height here so that consequent lines
-     * within the tag cloud containing only the smallest (not popular) tags
-     * be more readable.
-     *
-     * But IE6 do not increase the line-height given if a large (popular)
-     * tag occurs in a line, and those large tags almost overlap the
-     * line before the line where they resist.
-     *
-     * I googled it, but always get something like
-     * http://www.positioniseverything.net/explorer/lineheightbug.html
-     * (Internet Explorer 6: Line-height / Replaced Element Bug),
-     * not the bug I have here... Fuck IE.
-     */
+  /*
+   * It's worth increasing line-height here so that consequent lines
+   * within the tag cloud containing only the smallest (not popular) tags
+   * be more readable.
+   *
+   * But IE6 do not increase the line-height given if a large (popular)
+   * tag occurs in a line, and those large tags almost overlap the
+   * line before the line where they resist.
+   *
+   * I googled it, but always get something like
+   * http://www.positioniseverything.net/explorer/lineheightbug.html
+   * (Internet Explorer 6: Line-height / Replaced Element Bug),
+   * not the bug I have here... Fuck IE.
+   */
 
-    /*
-     * The bad side of this justify alignment is that spaces within tags
-     * are enlarged too, and that looks not very good. No CSS hack helps.
-     *
-     * Maybe a solution is to replace ordinary spaces there with non-breakable
-     * ones, but even if it is, I wouldn't use it because both entering
-     * non-breakable spaces within tags in source and translating them
-     * dynamically with JavaScript is ugly.
-     */
+  /*
+   * The bad side of this justify alignment is that spaces within tags
+   * are enlarged too, and that looks not very good. No CSS hack helps.
+   *
+   * Maybe a solution is to replace ordinary spaces there with non-breakable
+   * ones, but even if it is, I wouldn't use it because both entering
+   * non-breakable spaces within tags in source and translating them
+   * dynamically with JavaScript is ugly.
+   */
   text-align: justify;
 }
 #toggle_tags,
@@ -251,10 +248,10 @@ div.note {
   border: 1px Solid Gainsboro;
   padding: 10px;
 
-    /*
-     * Without this IE displays additional border below the top padding.
-     * Setting "background-color: inherit;" does not work here.
-     */
+  /*
+   * Without this IE displays additional border below the top padding.
+   * Setting "background-color: inherit;" does not work here.
+   */
   *background-color: White;
 }
 div.note.selected {
@@ -282,7 +279,7 @@ div.title a {
   color: FireBrick;
 }
 
-  /* compare with p */
+/* compare with p */
 div.header {
   margin-bottom: 1.2em;
 }
@@ -335,11 +332,11 @@ h2, h3, h4 {
   margin: 0;
   padding: 0;
 
-    /*
-     * Intentionally set bottom margins in pixels so that they would be equal
-     * for headers of different levels. It seems to me that headers
-     * with different bottom margins look not so good.
-     */
+  /*
+   * Intentionally set bottom margins in pixels so that they would be equal
+   * for headers of different levels. It seems to me that headers
+   * with different bottom margins look not so good.
+   */
   margin-top: 1.6em;
   margin-bottom: 14px;
 }
@@ -355,7 +352,7 @@ h4 {
   color: Black;
   font-size: 1.2em;
 }
-  /* This does not work in IE... so IE users will do without it. */
+/* this does not work in IE... so IE users will do without it. */
 h2+h3, h2+h4, h3+h4 {
   margin-top: 0;
 }
