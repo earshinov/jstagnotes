@@ -1,0 +1,425 @@
+/*
+ * HTML markup within note contents may look incosistenly.
+ * Following elements are guaranteed to work right:
+ *
+ * <h2>-<h4>, lists and tables, <img>, <pre> and <code>, cites and blockquotes,
+ * <hr>, and some simple elements like <strong> etc.
+ *
+ * Do not use <pre> anywhere with additional left offset (e.g., in lists).
+ * This is because preformatted blocks have fixed width in IE, so in IE
+ * <pre>'s contents will pop out of the right end of its parent...
+ *
+ * If the page contains large elements like images or tables, they can pop out
+ * of the right body border if browser window is so small that the elements'
+ * size can't be reduced accordingly.
+ */
+
+/*
+ * Warning: if a notes file is big enough (like mine, containing ~500 notes),
+ * markup begin to flow in IE. Particularly, the space between the left side
+ * of a note and the left body border begins to gradually change from the
+ * beginning to the end of file. I think this is due to some internal IE bugs.
+ *
+ * Or maybe IE discovered some HTML markup it could not render, and
+ * markup began to flow... I don't know, but anyway, it looks to be extremely
+ * hard to debug and I won't do it.
+ */
+
+/*
+ * --- Used colors ---
+ *
+ * Background:
+ *   White
+ *
+ * Borders and other lines:
+ *   Gainsboro - border color for page frame etc.
+ *   Gray - a) distinct color for page frame etc.
+ *          b) color of tables, <hr>'s and other elements within note contents
+ *
+ * Text:
+ *   DimGray - ordinary text color
+ *
+ * Links:
+ *   #1D60A3 - ordinary link color
+ *
+ * Headers within note contents:
+ *   Black - <h4>
+ *   #8c1b1b - <h3>
+ *   FireBrick - <h2>
+ *
+ * Tags:
+ *   (1) #4F8F85 - ordinary tag color
+ *   (2) #588F4F - color for a popular tag in the tag cloud, more intensive than (1)
+ *   (3) DimGray - color for a tag in the tag cloud that is not popular, more grayish than (1)
+ *
+ * Special colors:
+ *   #333333 - color for distinct text, particularly headers, preformatted blocks, some links etc.
+ *   FireBrick - distinct color for note titles etc. (alternative: #2D94FA)
+ *
+ * --- Color associations ---
+ *
+ * Text colors:   DimGray => #333333 => Black
+ * Header colors: Black => #8c1b1b => FireBrick
+ * Tag colors:    DimGray => #4F8F85 => #588F4F
+ */
+
+/* --- Page frame  */
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: White;
+  color: DimGray;
+  font: 9pt/1.4 Verdana, Arial, sans-serif;
+}
+@media print {
+  html {
+    font: 100%/150% Georgia, "Times New Roman", serif;
+  }
+}
+
+@media screen {
+  html {
+    height: 100%;
+  }
+  body {
+    min-height: 100%;
+    margin: 0 auto;
+    border-left: 1px solid Gainsboro;
+    border-right: 1px solid Gainsboro;
+    padding-left: 10px;
+    padding-right: 10px;
+    max-width: 698px;
+  }
+  * html body {
+    height: 100%;
+    width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
+  }
+}
+
+#wrap {
+  padding-top: 10px;
+}
+@media screen {
+  #wrap {
+    /* necessary when body has borders */
+    padding-bottom: 1px;
+  }
+}
+
+h1 {
+  font-size: 1.5em;
+  font-weight: normal;
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+/* --- Other elements --- */
+
+a {
+  color: #1D60A3;
+}
+
+/*
+ * Internal links between notes.
+ * This does not work in IE... so IE users will do without it.
+ */
+a[href^='#']:not([href='#']) {
+  text-decoration: none;
+  border-bottom: 1px dashed #1D60A3;
+}
+a[href^='#footnote'] {
+  border-bottom-width: 0;
+}
+
+/*
+ * Links handled with JavaScript.
+ * Do not use attribute selectors here as this should work in IE.
+ */
+a.js_link {
+  color: DimGray;
+}
+a.js_link.active_link {
+  color: #333333;
+}
+
+/* See script.js for more details */
+@media print {
+  html.prettyprint a:not([href^='#']):after {
+    content: " (" attr(href) ")";
+  }
+}
+
+/* --- Tags decoration */
+
+a.note_tag {
+  /* compare with #toggle_tags, ..., #toggle_all_tags */
+  margin: 0;
+  padding: 0;
+  margin-right: 2px;
+
+  color: #4F8F85;
+  white-space: nowrap;
+}
+
+a.tag_size_1 {
+  font-size: 140%;
+  color: #588F4F;
+}
+a.tag_size_2 {
+  font-size: 100%;
+  color: #4F8F85;
+}
+a.tag_size_3 {
+  font-size: 80%;
+  color: DimGray;
+}
+
+/*
+ * If one writes 'a.chosen_tag' instead of 'a.note_tag.chosen_tag',
+ * IE leaves styles from 'a.note_tag' (see above) in notes.
+ */
+a.note_tag.chosen_tag {
+  color: #333333;
+}
+
+/* --- Tag cloud and filter decoration */
+
+#control {
+  margin-bottom: 20px; /* margin-top is not needed as margin-bottom for <h1> is set */
+  border: 1px Solid FireBrick;
+  padding: 5px;
+}
+
+#control div {
+  margin: 5px;
+}
+
+#popular_tags,
+#all_tags {
+  /*
+   * It's worth increasing line-height here so that consequent lines
+   * within the tag cloud containing only the smallest (not popular) tags
+   * be more readable.
+   *
+   * But IE6 do not increase the line-height given if a large (popular)
+   * tag occurs in a line, and those large tags almost overlap the
+   * line before the line where they resist.
+   *
+   * I googled it, but always get something like
+   * http://www.positioniseverything.net/explorer/lineheightbug.html
+   * (Internet Explorer 6: Line-height / Replaced Element Bug),
+   * not the bug I have here... Fuck IE.
+   */
+
+  /*
+   * The bad side of this justify alignment is that spaces within tags
+   * are enlarged too, and that looks not very good. No CSS hack helps.
+   *
+   * Maybe a solution is to replace ordinary spaces there with non-breakable
+   * ones, but even if it is, I wouldn't use it because both entering
+   * non-breakable spaces within tags in source and translating them
+   * dynamically with JavaScript is ugly.
+   */
+  text-align: justify;
+}
+#toggle_tags,
+#toggle_popular_tags,
+#toggle_all_tags {
+  /* compare with a.note_tag */
+  margin: 0;
+  padding: 0;
+  margin-right: 2px;
+}
+
+#filter a.note_tag {
+  /* separate chosen tags from the clear button */
+  margin-right: 5px;
+}
+
+/* --- Note frame */
+
+div.note {
+  margin: 10px 0;
+  border: 1px Solid Gainsboro;
+  padding: 10px;
+
+  /*
+   * Without this IE displays additional border below the top padding.
+   * Setting "background-color: inherit;" does not work here.
+   */
+  *background-color: White;
+}
+div.note.selected {
+  /*
+   * I use a custom class instead of :target as I want to emphasize *all*
+   * notes forced to be shown by clicking a link, not just the last such note.
+   *
+   * I do not style :target at all as there is no way to deselect a note
+   * except cutting of the hash part of the URL manually. Most of ordinary
+   * users are not ready to do this, so a selected note will hang around
+   * bothering them...
+   */
+  border: 1px Dotted Gray;
+}
+
+div.date {
+  float: right;
+}
+div.title {
+  text-align: center;
+}
+div.date,
+div.title,
+div.title a {
+  color: FireBrick;
+}
+
+/* compare with p */
+div.header {
+  margin-bottom: 1.2em;
+}
+div.tags {
+  margin-top: 1.2em;
+}
+
+/* --- Note content decoration */
+
+a.img {
+  border-width: 0;
+}
+
+blockquote {
+  margin-left: 20px;
+  border-left: 1px Solid Gray;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+ol, ul {
+  margin: 0 0 1.2em 2.5em;
+  padding: 0;
+}
+li {
+  margin: 5px 0 5px;
+  padding: 0;
+}
+
+dl {
+  margin: 0 0 1.6em;
+  padding: 0;
+}
+dt {
+  margin: 1.2em 0 .8em;
+}
+dd {
+  margin: 0 0 0 2.5em;
+  padding: 0;
+}
+
+p {
+  /* compare with div.header and div.tags */
+  margin: 0 0 1.2em;
+  padding: 0;
+}
+h2, h3, h4 {
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+
+  /*
+   * Intentionally set bottom margins in pixels so that they would be equal
+   * for headers of different levels. It seems to me that headers
+   * with different bottom margins look not so good.
+   */
+  margin-top: 1.6em;
+  margin-bottom: 14px;
+}
+h2 {
+  color: FireBrick;
+  font-size: 1.6em;
+}
+h3 {
+  color: #8c1b1b;
+  font-size: 1.4em;
+}
+h4 {
+  color: Black;
+  font-size: 1.2em;
+}
+/* this does not work in IE... so IE users will do without it. */
+h2+h3, h2+h4, h3+h4 {
+  margin-top: 0;
+}
+
+hr {
+  background-color: Gray;
+  border-width: 0;
+  color: Gray;
+  height: 1px;
+}
+
+img.bordered {
+  border: 1px Solid Gray;
+}
+
+pre, code {
+  font-family: monospace;
+  white-space: pre;
+}
+pre {
+  border: 1px Solid Gray;
+  padding: 1px;
+}
+@media screen {
+  pre {
+    /*
+     * For IE6 we must specify fixed width so that preformatted blocks do not
+     * push the right border of notes beyond the maximum width set with an
+     * expression (see the beginning of this file). For other browsers we
+     * have max-width which does not allow notes to extend too far horizontally.
+     *
+     * If user makes his browser's window too small, preformatted blocks will
+     * surprise him. It's his fault anyway that he uses IE6.
+     *
+     * width: expression(this.width > 674 ? "674px" : this.width);
+     */
+    _width: 674px;
+
+    max-height: 500px;
+    *height: expression((this.scrollHeight > 500) ? "500px" : "auto");
+
+    /*
+     * Max-width does not work properly here in IE8 (standards mode), so we
+     * disable it. Note that IE8 (standards mode) does not support expressions,
+     * so we can't limit the height at all.
+     */
+    max-height: none\0/;
+
+    overflow: auto;
+
+    /*
+     * add padding to make room for the scroll bar
+     * http://dave.srednal.com/archives/31
+     * default scroll bar size in Windows is 16px
+     */
+    *padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "17px" : "1px");
+  }
+}
+
+table {
+  border-collapse: collapse;
+}
+td, th {
+  border: 1px Solid Gray;
+  font-weight: normal;
+  padding: 5px;
+}
+
+pre, code, th {
+  color: #333333;
+}
