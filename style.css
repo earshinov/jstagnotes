@@ -367,10 +367,6 @@ img.bordered {
   border: 1px Solid Gray;
 }
 
-pre, code {
-  font-family: monospace;
-  white-space: pre;
-}
 pre {
   border: 1px Solid Gray;
   padding: 1px;
