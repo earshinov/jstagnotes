@@ -42,11 +42,6 @@
  * Links:
  *   #1D60A3 - ordinary link color
  *
- * Headers within note contents:
- *   Black - <h4>
- *   #8c1b1b - <h3>
- *   FireBrick - <h2>
- *
  * Tags:
  *   (1) #4F8F85 - ordinary tag color
  *   (2) #588F4F - color for a popular tag in the tag cloud, more intensive than (1)
@@ -54,12 +49,10 @@
  *
  * Special colors:
  *   #333333 - color for distinct text, particularly headers, preformatted blocks, some links etc.
- *   FireBrick - distinct color for note titles etc. (alternative: #2D94FA)
  *
  * --- Color associations ---
  *
  * Text colors:   DimGray => #333333 => Black
- * Header colors: Black => #8c1b1b => FireBrick
  * Tag colors:    DimGray => #4F8F85 => #588F4F
  */
 
@@ -221,6 +214,9 @@ a.note_tag.chosen_tag {
 #control {
   margin-bottom: 10px;
   border: 1px Solid FireBrick;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   padding: 5px;
 }
 
@@ -289,6 +285,9 @@ a.note_tag.chosen_tag {
 div.note {
   margin: 10px 0;
   border: 1px Solid Gainsboro;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   padding: 10px;
 
   /*
@@ -332,6 +331,12 @@ div.tags {
 
 /* --- Note content decoration */
 
+div.indented {
+  margin-left: 1.25em;
+  border-left: 1px Solid Gray;
+  padding-left: 1.25em;
+}
+
 a.img {
   border-width: 0;
 }
@@ -371,7 +376,7 @@ p {
   padding: 0;
 }
 h2, h3, h4 {
-  font-weight: normal;
+  color: #333333;
   margin: 0;
   padding: 0;
 
@@ -380,25 +385,14 @@ h2, h3, h4 {
    * for headers of different levels. It seems to me that headers
    * with different bottom margins look not so good.
    */
-  margin-top: 1.6em;
-  margin-bottom: 14px;
+  margin-top: 1.2em;
+  margin-bottom: 10px;
 }
-h2 {
-  color: FireBrick;
-  font-size: 1.6em;
-}
-h3 {
-  color: #8c1b1b;
-  font-size: 1.4em;
-}
-h4 {
-  color: Black;
-  font-size: 1.2em;
-}
+h2 { font-weight: normal; font-size: 1.2em; }
+h3 { font-weight: normal; color: Black; font-size: 1em; }
+h4 { font-size: .8em; }
 /* this does not work in IE... so IE users will do without it. */
-h2+h3, h2+h4, h3+h4 {
-  margin-top: 0;
-}
+h2+h3, h2+h4, h3+h4 { margin-top: 0; }
 
 hr {
   background-color: Gray;
