@@ -184,6 +184,9 @@ a.note_tag.chosen_tag {
 #control {
   margin-bottom: 20px; /* margin-top is not needed as margin-bottom for <h1> is set */
   border: 1px Solid FireBrick;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   padding: 5px;
 }
 
@@ -238,6 +241,9 @@ a.note_tag.chosen_tag {
 div.note {
   margin: 10px 0;
   border: 1px Solid Gainsboro;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   padding: 10px;
 
   /*
