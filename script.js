@@ -124,7 +124,7 @@ L10N.dict = L10N.dict || {};
 //L10N.dict["Popular"] =
 //L10N.dict["All"] =
 //L10N.dict["Filter"] =
-//L10N.dict["Add from list"] =
+//L10N.dict["Choose from list"] =
 //L10N.dict["Clear"] =
 
 L10N.dictPlural = L10N.dictPlural || {};
@@ -481,7 +481,7 @@ function header(){
     "      <div id='all_tags' style='display: none'></div>\n" +
     "    </div>\n" +
     "    <div>\n" +
-    "      <label for='select_tag'>" + I18N.tr("Add from list") + ":</label>\n" +
+    "      <label for='select_tag'>" + I18N.tr("Choose from list") + ":</label>\n" +
     "      <select id='select_tag'>\n" +
     "        <option></option>\n" +
     "      </select>\n" +
