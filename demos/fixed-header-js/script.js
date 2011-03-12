@@ -83,6 +83,22 @@ var Maps = {
 
 /* --- Miscellaneous functions ---------------------------------------------- */
 
+function getUnhashedLocation(){
+  return window.location.href.replace(/#.*/, '');
+}
+
+function getLocalLinks(){
+  /* IE appends current page URL to relative links (including ones starting with #) */
+  var location = getUnhashedLocation();
+  return $("a[href^='#'][href!='#'], a[href^='" + location + "#'][href!='" + location + "#']");
+}
+
+function getForeignLinks(){
+  /* IE appends current page URL to relative links (including ones starting with #) */
+  var location = getUnhashedLocation();
+  return $("a:not([href^='#']):not([href^='" + location + "#'])");
+}
+
 var cachedNotesBlockHeight = null;
 function updateNotesBlockHeight(){
   var $notes = $('#notes');
@@ -108,7 +124,7 @@ L10N.dict = L10N.dict || {};
 //L10N.dict["Popular"] =
 //L10N.dict["All"] =
 //L10N.dict["Filter"] =
-//L10N.dict["Add from list"] =
+//L10N.dict["Choose from list"] =
 //L10N.dict["Clear"] =
 
 L10N.dictPlural = L10N.dictPlural || {};
@@ -465,7 +481,7 @@ function header(){
     "      <div id='all_tags' style='display: none'></div>\n" +
     "    </div>\n" +
     "    <div>\n" +
-    "      <label for='select_tag'>" + I18N.tr("Add from list") + ":</label>\n" +
+    "      <label for='select_tag'>" + I18N.tr("Choose from list") + ":</label>\n" +
     "      <select id='select_tag'>\n" +
     "        <option></option>\n" +
     "      </select>\n" +
@@ -585,7 +601,7 @@ $(document).ready(function(){
       return false;
     });
 
-    $("a[href^=#][href!=#]").each(function(){
+    getLocalLinks().each(function(){
       var $this = $(this);
       var $note = $($this.attr("href"));
       if ($note.is(".note")){
@@ -605,10 +621,7 @@ $(document).ready(function(){
     if (window.onbeforeprint !== undefined){
 
       window.onbeforeprint = function(){
-        /* Selector "a:not([href^=#])" does not work in IE as it appends
-         * current page URL to the beginning of the href when it's retrieved
-         * with JavaScript */
-        $("a:not([href*=#])").each(function(){
+        getForeignLinks().each(function(){
 
           //Store the link's original text in the jQuery data store
           $(this).data("linkText", $(this).text());
@@ -619,7 +632,7 @@ $(document).ready(function(){
       };
 
       window.onafterprint = function(){
-        $("a:not([href$=#])").each(function(){
+        getForeignLinks().each(function(){
 
           //Restore the links text to the original value by pulling it out of the jQuery data store
           $(this).text($(this).data("linkText"));
