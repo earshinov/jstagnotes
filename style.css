@@ -238,6 +238,9 @@ a.note_tag.chosen_tag {
   #notes {
     overflow: auto;
     border: 1px solid Gainsboro;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
     padding: 0 10px;
     margin-bottom: 10px;
   }
