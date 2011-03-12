@@ -6,7 +6,7 @@ var L10N = {
     //"Popular": "",
     //"All": "",
     //"Filter": "",
-    //"Add from list": "",
+    //"Choose from list": "",
     //"Clear": ""
   },
 
