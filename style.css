@@ -326,6 +326,16 @@ dd {
   padding: 0;
 }
 
+dl.compact dt {
+  margin: 0;
+}
+dl.compact dd {
+  margin: 0;
+}
+dl.compact dd:before {
+  content: '⁃ ';
+}
+
 p {
   /* compare with div.header and div.tags */
   margin: 1.2em 0;
