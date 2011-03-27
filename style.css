@@ -293,6 +293,13 @@ div.indented {
   padding-left: 1.25em;
 }
 
+.bg-green {
+  background-color: #EBFFC6;
+}
+.bg-red {
+  background-color: #FFE6ED;
+}
+
 a.img {
   border-width: 0;
 }
