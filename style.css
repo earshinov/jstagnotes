@@ -33,8 +33,8 @@
  *
  * Borders and other lines:
  *   Gainsboro - border color for page frame etc.
- *   Gray - a) distinct color for page frame etc.
- *          b) color of tables, <hr>'s and other elements within note contents
+ *   DarkGray - a) distinct color for page frame etc.
+ *              b) color of tables, <hr>'s and other elements within note contents
  *
  * Text:
  *   DimGray - ordinary text color
@@ -262,7 +262,7 @@ div.note.selected {
    * users are not ready to do this, so a selected note will hang around
    * bothering them...
    */
-  border: 1px Dotted Gray;
+  border: 1px Dotted DarkGray;
 }
 
 div.date {
@@ -289,7 +289,7 @@ div.tags {
 
 div.indented {
   margin-left: 1.25em;
-  border-left: 1px Solid Gray;
+  border-left: 1px Solid DarkGray;
   padding-left: 1.25em;
 }
 
@@ -306,7 +306,7 @@ a.img {
 
 blockquote {
   margin-left: 20px;
-  border-left: 1px Solid Gray;
+  border-left: 1px Solid DarkGray;
   padding-left: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
@@ -368,18 +368,18 @@ h4 { font-size: .8em; }
 h2+h3, h2+h4, h3+h4 { margin-top: 0; }
 
 hr {
-  background-color: Gray;
+  background-color: DarkGray;
   border-width: 0;
-  color: Gray;
+  color: DarkGray;
   height: 1px;
 }
 
 img.bordered {
-  border: 1px Solid Gray;
+  border: 1px Solid DarkGray;
 }
 
 pre {
-  border: 1px Solid Gray;
+  border: 1px Solid DarkGray;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -428,7 +428,7 @@ table {
   border-collapse: collapse;
 }
 td, th {
-  border: 1px Solid Gray;
+  border: 1px Solid DarkGray;
   font-weight: normal;
   padding: 5px;
 }
