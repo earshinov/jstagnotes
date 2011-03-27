@@ -375,6 +375,9 @@ pre {
   border: 1px Solid Gray;
   padding: 1px;
 }
+pre.noborder {
+  border: none;
+}
 @media screen {
   pre {
     /*
