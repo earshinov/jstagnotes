@@ -380,7 +380,10 @@ img.bordered {
 
 pre {
   border: 1px Solid Gray;
-  padding: 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding: 5px;
 }
 pre.noborder {
   border: none;
@@ -417,7 +420,7 @@ pre.noborder {
      * http://dave.srednal.com/archives/31
      * default scroll bar size in Windows is 16px
      */
-    *padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "17px" : "1px");
+    *padding-bottom: expression((this.scrollWidth > this.offsetWidth) ? "21px" : "5px");
   }
 }
 
