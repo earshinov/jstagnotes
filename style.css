@@ -48,11 +48,12 @@
  *   (3) DimGray - color for a tag in the tag cloud that is not popular, more grayish than (1)
  *
  * Special colors:
- *   #333333 - color for distinct text, particularly headers, preformatted blocks, some links etc.
+ *   #222222, #333333, #444444 - colors for distinct text, particularly
+ *                               headers, preformatted blocks, some links etc.
  *
  * --- Color associations ---
  *
- * Text colors:   DimGray => #333333 => Black
+ * Text colors:   DimGray => #444444 => #333333 => #222222 => Black
  * Tag colors:    DimGray => #4F8F85 => #588F4F
  */
 
@@ -304,6 +305,11 @@ a.img {
   border-width: 0;
 }
 
+strong {
+  font-weight: normal;
+  color: #222222;
+}
+
 blockquote {
   margin-left: 20px;
   border-left: 1px Solid DarkGray;
@@ -433,6 +439,9 @@ td, th {
   padding: 5px;
 }
 
-pre, code, th {
+code, th {
   color: #333333;
+}
+pre code {
+  color: #444444;
 }
