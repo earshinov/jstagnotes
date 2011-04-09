@@ -288,19 +288,6 @@ div.tags {
 
 /* --- Note content decoration */
 
-div.indented {
-  margin-left: 1.25em;
-  border-left: 1px Solid DarkGray;
-  padding-left: 1.25em;
-}
-
-.bg-green {
-  background-color: #EBFFC6;
-}
-.bg-red {
-  background-color: #FFE6ED;
-}
-
 a.img {
   border-width: 0;
 }
@@ -337,16 +324,6 @@ dt {
 dd {
   margin: 0 0 0 2.5em;
   padding: 0;
-}
-
-dl.compact dt {
-  margin: 0;
-}
-dl.compact dd {
-  margin: 0;
-}
-dl.compact dd:before {
-  content: '⁃ ';
 }
 
 p {
@@ -390,9 +367,6 @@ pre {
   -moz-border-radius: 5px;
   border-radius: 5px;
   padding: 5px;
-}
-pre.noborder {
-  border: none;
 }
 @media screen {
   pre {
