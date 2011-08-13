@@ -67,11 +67,12 @@ html, body {
 html {
   background-color: White;
   color: DimGray;
-  font: 9pt/1.4 Verdana, Arial, sans-serif;
+  font: 9pt Verdana, Arial, sans-serif;
+  line-height: 1.5em;
 }
 @media print {
   html {
-    font: 100%/150% Georgia, "Times New Roman", serif;
+    font: 100% Georgia, "Times New Roman", serif;
   }
 }
 
@@ -86,11 +87,11 @@ html {
     border-right: 1px solid Gainsboro;
     padding-left: 10px;
     padding-right: 10px;
-    max-width: 698px;
+    max-width: 598px;
   }
   * html body {
     height: 100%;
-    width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
+    width: expression((document.documentElement.clientWidth > 620) ? "520px" : "auto");
   }
   html.flexboxes body {
     height: 100%;
