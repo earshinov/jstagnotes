@@ -48,11 +48,12 @@
  *   (3) DimGray - color for a tag in the tag cloud that is not popular, more grayish than (1)
  *
  * Special colors:
- *   #333333 - color for distinct text, particularly headers, preformatted blocks, some links etc.
+ *   #222222, #333333, #444444 - colors for distinct text, particularly
+ *                               headers, preformatted blocks, some links etc.
  *
  * --- Color associations ---
  *
- * Text colors:   DimGray => #333333 => Black
+ * Text colors:   DimGray => #444444 => #333333 => #222222 => Black
  * Tag colors:    DimGray => #4F8F85 => #588F4F
  */
 
@@ -66,11 +67,12 @@ html, body {
 html {
   background-color: White;
   color: DimGray;
-  font: 9pt/1.4 Verdana, Arial, sans-serif;
+  font: 9pt Verdana, Arial, sans-serif;
+  line-height: 1.5em;
 }
 @media print {
   html {
-    font: 100%/150% Georgia, "Times New Roman", serif;
+    font: 100% Georgia, "Times New Roman", serif;
   }
 }
 
@@ -85,11 +87,11 @@ html {
     border-right: 1px solid Gainsboro;
     padding-left: 10px;
     padding-right: 10px;
-    max-width: 698px;
+    max-width: 598px;
   }
   * html body {
     height: 100%;
-    width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
+    width: expression((document.documentElement.clientWidth > 620) ? "520px" : "auto");
   }
   html.flexboxes body {
     height: 100%;
@@ -334,21 +336,13 @@ div.tags {
 
 /* --- Note content decoration */
 
-div.indented {
-  margin-left: 1.25em;
-  border-left: 1px Solid DarkGray;
-  padding-left: 1.25em;
-}
-
-.bg-green {
-  background-color: #EBFFC6;
-}
-.bg-red {
-  background-color: #FFE6ED;
-}
-
 a.img {
   border-width: 0;
+}
+
+strong {
+  font-weight: normal;
+  color: #222222;
 }
 
 blockquote {
@@ -378,16 +372,6 @@ dt {
 dd {
   margin: 0 0 0 2.5em;
   padding: 0;
-}
-
-dl.compact dt {
-  margin: 0;
-}
-dl.compact dd {
-  margin: 0;
-}
-dl.compact dd:before {
-  content: '⁃ ';
 }
 
 p {
@@ -431,9 +415,6 @@ pre {
   -moz-border-radius: 5px;
   border-radius: 5px;
   padding: 5px;
-}
-pre.noborder {
-  border: none;
 }
 @media screen {
   pre {
@@ -480,6 +461,9 @@ td, th {
   padding: 5px;
 }
 
-pre, code, th {
+code, th {
   color: #333333;
+}
+pre code {
+  color: #444444;
 }
