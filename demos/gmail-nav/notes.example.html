@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="shortcut icon" href="favicon.png" />
+  <link rel="stylesheet" type="text/css" href="style.css" media="all" />
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="jquery.ba-bbq.js"></script>
+  <script type="text/javascript" src="jquery.scrollTo.js"></script>
+  <script type="text/javascript" src="localization.example.js"></script>
+  <script type="text/javascript" src="script.js"></script>
+  <title>Notes</title>
+</head>
+<body>
+<script type="text/javascript">header()</script>
+
+<!-- Template
+
+<div class="note">
+  <div class="header">
+    <div class="date">25.09.2010</div>
+    <div class="title">
+      <a href="...">
+        ...</a>
+    </div>
+  </div>
+  <div class="content">
+    ...
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">...</a>
+    ...
+  </div>
+</div>
+
+-->
+
+<div class="note">
+  <div class="header">
+    <div class="date">02.06.2009</div>
+    <div class="title">Link</div>
+  </div>
+  <div class="content">
+    <p>Пример ссылки на другую заметку: <a href="#link_target">Link target</a>.</p>
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">демонстрация</a>
+    <a class="note_tag" href="#">ссылка</a>
+  </div>
+</div>
+
+<div class="note" id="link_target">
+  <div class="header">
+    <div class="date">02.06.2009</div>
+    <div class="title">Link target</div>
+  </div>
+  <div class="content">
+    Просто заметка, на которую ссылается другая.
+  </div>
+  <div class="tags"></div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">02.06.2009</div>
+    <div class="title">Пример заметки с другим форматированием</div>
+  </div>
+  <div class="content">
+    <h2>Заголовок h2</h2>
+
+    <p>Горизонтальную черту проводим, используя
+    <code>&lt;hr noshade='noshade'/&gt;</code>.</p>
+    <hr noshade="noshade" />
+
+    <p>Продолжение:
+      <a href="http://github.com/earshinov/jstagnotes/">ссылка</a>,
+      <a href="http://github.com/earshinov/jstagnotes/#footer">ссылка с якорем</a>.
+      <b>Кусок жирного текста</b>.</p>
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">демонстрация</a>
+    <a class="note_tag" href="#">ссылка</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">02.06.2009</div>
+    <div class="title">Пример заметки с pre</div>
+  </div>
+  <div class="content">
+    <p>Можно использовать моноширинный текст прямо посреди строки,
+    используя тэг <code>&lt;code&gt;</code>. Другой
+    вариант - блок форматированного текста. Пример:</p>
+    <pre>
+this.updateForSelectedTag = function(tag){
+  $(".note:visible").each(function(){
+    var $this = $(this);
+    if (TagsCache.getNoteTags($this).indexOf(tag) === -1)
+      $this.removeClass("selected").hide();
+  });
+
+  $("#notes .note_tag").filter(Predicates.hasText(tag)).addClass("chosen_tag");
+};
+
+this.updateForDeselectedTag = function(tag){
+  if (Filter.isEmpty()){
+    $("#notes .note_tag").removeClass("chosen_tag");
+    $(".note").removeClass("selected").show();
+    return;
+  }
+
+  $(".note:hidden").each(function(){
+    if (noteSatisfiesFilter($(this)))
+      $(this).show();
+  });
+  $(".selected").each(function(){
+    if (noteSatisfiesFilter($(this)))
+      $(this).removeClass("selected");
+  });
+
+  $("#notes .note_tag").filter(Predicates.hasText(tag)).removeClass("chosen_tag");
+};
+
+this.update = function(){
+  $(".note").each(function(){
+    $(this).removeClass("selected").toggle(noteSatisfiesFilter($(this)));
+  });
+
+  $("#notes .note_tag").each(function(){
+    $(this).toggleClass("chosen_tag", Filter.isTagChosen($(this).text()));
+  });
+};
+</pre>
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">демонстрация</a>
+    <a class="note_tag" href="#">pre</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">02.06.2009</div>
+    <div class="title">Длинный pre</div>
+  </div>
+  <div class="content">
+<pre>This is a very long line. This is a very long line. This is a very long line. This is a very long line.</pre>
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">демонстрация</a>
+    <a class="note_tag" href="#">pre</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">02.06.2009</div>
+    <div class="title">Пример заметки с таблицей</div>
+  </div>
+  <div class="content">
+    <table>
+      <thead><tr>
+        <th>Столбец 1</th>
+        <th>Столбец 2</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>Ячейка 1</td>
+          <td>Ячейка 2</td>
+        </tr>
+        <tr>
+          <td>Ячейка 3</td>
+          <td>Ячейка 4</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">демонстрация</a>
+    <a class="note_tag" href="#">table</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">14.04.2007</div>
+    <div class="title">
+      <a href="http://www.calc5.com/">
+        Online calculator with symbolic calculations and graphs</a>
+    </div>
+  </div>
+  <div class="content">
+    Онлайн-калькулятор, умеющий символьные вычисления и построение графиков
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">сайт</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">11.04.2007</div>
+    <div class="title">
+      <a href="http://www.Linux.org.ru/books/GNU/emacs/emacs_toc.html">
+        Руководство по GNU Emacs</a>
+    </div>
+  </div>
+  <div class="content">
+    Руководство по <strong>GNU Emacs</strong> на русском языке
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">emacs</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">25.02.2007</div>
+    <div class="title">
+      <a href="http://www.walterzorn.com/grapher/grapher_e.htm">
+        Function Grapher Online</a>
+    </div>
+  </div>
+  <div class="content">
+    Построитель графиков
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">сайт</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">05.02.2007</div>
+    <div class="title">
+      <a href="http://www.htmlbook.ru/">
+        Документация по тегам HTML и свойствам CSS</a>
+    </div>
+  </div>
+  <div class="content">
+    Документация по тегам HTML и свойствам CSS
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">веб-разработка</a>
+    <a class="note_tag" href="#">вёрстка</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">05.02.2007</div>
+    <div class="title">
+      <a href="http://tools.decisionsoft.com/schemaValidate/">
+        Онлайн валидатор для XML Schema</a>
+    </div>
+  </div>
+  <div class="content">
+    Онлайн валидатор для XML Schema
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">XML</a>
+    <a class="note_tag" href="#">XML Schema</a>
+    <a class="note_tag" href="#">сайт</a>
+    <a class="note_tag" href="#">валидатор</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">02.02.2007</div>
+    <div class="title">
+      <a href="http://bookgo.org/">Book Go!</a>
+    </div>
+  </div>
+  <div class="content">
+    База книг для скачивания, преимущественно англоязычных
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">сайт</a>
+    <a class="note_tag" href="#">книга</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">29.01.2007</div>
+    <div class="title">
+      <a href="http://doc.trolltech.com/">Qt Documentation</a>
+    </div>
+  </div>
+  <div class="content">
+    Документация Qt на английском языке
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">программирование</a>
+    <a class="note_tag" href="#">Qt</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">08.01.2007</div>
+    <div class="title">
+      <a href="http://www.possibility.com/Cpp/CppCodingStandard.html">
+        C++ coding standard</a>
+    </div>
+  </div>
+  <div class="content">
+    Руководство по написанию понятного и идеологически правильного кода на C++
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">программирование</a>
+    <a class="note_tag" href="#">C++</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://www.catch22.net/tuts/selfdel">Self-Deleting Executables</a>
+    </div>
+  </div>
+  <div class="content">
+    Методы написания самоудаляющихся программ для Windows
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">программирование</a>
+    <a class="note_tag" href="#">win32</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://www.Linux.org.ru/books/lor-faq/">LINUX.ORG.RU FAQ</a>
+    </div>
+  </div>
+  <div class="content">
+    Очень полезный русскоязычный FAQ по Linux
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">Linux</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://www.ixbt.com/storage/ntfs.html">Файловая система NTFS</a>
+    </div>
+  </div>
+  <div class="content">
+    Устройство файловой системы NTFS
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">научно-популярное</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://soft32.ru/delphi.shtml?topic=os&amp;n:title=app_xp_hide">
+        Прячем программу от Ctrl Alt Del</a>
+    </div>
+  </div>
+  <div class="content">
+    Код, который надо написать, чтобы скрыть программу от Диспетчера задач.
+    К сожалению, Delphi.
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">программирование</a>
+    <a class="note_tag" href="#">win32</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://wasm.ru/article.php?article=apihook_1">
+        Перехват API функций в Windows NT</a>
+    </div>
+  </div>
+  <div class="content">
+    Перехват API функций в Windows NT
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">программирование</a>
+    <a class="note_tag" href="#">win32</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://wasm.ru/article.php?article=lockfileswork">
+        Методы работы с занятыми файлами</a>
+    </div>
+  </div>
+  <div class="content">
+    Как в своей программе прочитать файл, занятый другим процессом
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">программирование</a>
+    <a class="note_tag" href="#">win32</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://forum.vingrad.ru/index.php?showtopic=55987">
+        Стандарты оформления кода</a>
+    </div>
+  </div>
+  <div class="content">
+    Подборка стандартов оформления кода для различных языков
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">style guide</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://www.wilcob.com/Wilco/XsltTransformer.aspx">
+        Online XSLT Transformer</a>
+    </div>
+  </div>
+  <div class="content">
+    Сайт, который умеет преобразовывать переданный XML-файл, используя
+    переданный XSLT-шаблон. Работает только для XSLT версии 1.
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">XML</a>
+    <a class="note_tag" href="#">XSLT</a>
+    <a class="note_tag" href="#">сайт</a>
+  </div>
+</div>
+
+<div class="note">
+  <div class="header">
+    <div class="date">22.10.2007</div>
+    <div class="title">
+      <a href="http://www.google.ru/intl/ru/help/features.html">
+        Фичи поиска в Google</a>
+    </div>
+  </div>
+  <div class="content">
+    Фичи поиска в Google
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">софт</a>
+  </div>
+</div>
+
+<script type="text/javascript">footer()</script>
+</body>
+</html>
