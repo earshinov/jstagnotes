@@ -67,11 +67,12 @@ html, body {
 html {
   background-color: White;
   color: DimGray;
-  font: 9pt/1.4 Verdana, Arial, sans-serif;
+  font: 9pt Verdana, Arial, sans-serif;
+  line-height: 1.5em;
 }
 @media print {
   html {
-    font: 100%/150% Georgia, "Times New Roman", serif;
+    font: 100% Georgia, "Times New Roman", serif;
   }
 }
 
@@ -83,10 +84,10 @@ html {
     margin: 0 auto;
     padding-left: 10px;
     padding-right: 10px;
-    max-width: 700px;
+    max-width: 600px;
   }
   * html body {
-    width: expression((document.documentElement.clientWidth > 720) ? "720px" : "auto");
+    width: expression((document.documentElement.clientWidth > 620) ? "620px" : "auto");
   }
 }
 
