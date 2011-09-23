@@ -300,7 +300,7 @@ var Filter = new function(){
   });
 
   function tagString(tag){
-    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a>";
+    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a> ";
   }
 
   this.tags = [];
@@ -315,7 +315,7 @@ var Filter = new function(){
 
   this.addTag = function(tag){
     this.tags.push(tag);
-    $(tagString(tag)).insertBefore($clear);
+    $clear.before(tagString(tag));
     $filter.show();
 
     if (TestOptions.test)
@@ -356,7 +356,7 @@ var Filter = new function(){
     else{
       $filter.show();
       $.each(this.tags, function(i, tag){
-        $(tagString(tag)).insertBefore($clear);
+        $clear.before(tagString(tag));
       });
     }
 
