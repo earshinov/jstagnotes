@@ -195,6 +195,9 @@ a.note_tag.chosen_tag {
 #control div {
   margin: 5px;
 }
+#control div div {
+  margin: 5px 0;
+}
 
 #popular_tags,
 #all_tags {
