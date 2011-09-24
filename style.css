@@ -279,10 +279,10 @@ div.title a {
 
 /* compare with p */
 div.header {
-  margin-bottom: 1.2em;
+  margin-bottom: 1em;
 }
 div.tags {
-  margin-top: 1.2em;
+  margin-top: 1em;
 }
 
 /* --- Note content decoration */
@@ -318,7 +318,7 @@ dl {
   padding: 0;
 }
 dt {
-  margin: 1.2em 0 .8em;
+  margin: 1em 0 .6em;
 }
 dd {
   margin: 0 0 0 2.5em;
@@ -327,7 +327,7 @@ dd {
 
 p {
   /* compare with div.header and div.tags */
-  margin: 1.2em 0;
+  margin: 1em 0;
   padding: 0;
 }
 h2, h3, h4 {
@@ -340,7 +340,7 @@ h2, h3, h4 {
    * for headers of different levels. It seems to me that headers
    * with different bottom margins look not so good.
    */
-  margin-top: 1.2em;
+  margin-top: 1em;
   margin-bottom: 10px;
 }
 h2 { font-weight: normal; font-size: 1.2em; }
