@@ -411,10 +411,21 @@ td, th {
   font-weight: normal;
   padding: 5px;
 }
+th {
+  color: #333;
+}
 
-code, th {
-  color: #333333;
+code {
+  color: #333;
+  background-color: #eee;
+  padding: 1px 2px;
+  font-size: smaller;
+}
+.title code, a code, pre code {
+  color: inherit;
+  background-color: transparent;
+  padding: 0;
 }
 pre code {
-  color: #444444;
+  color: #444;
 }
