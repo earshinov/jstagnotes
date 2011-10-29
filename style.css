@@ -277,11 +277,18 @@ div.title a {
   color: FireBrick;
 }
 
-/* compare with p */
 div.header {
+  /* compare with p */
   margin-bottom: 1em;
 }
+div.content > :last-child {
+  /* In case tags are absent, this prevents too much whitespace between
+     the content and the bottom border of the note.  Also, this removes
+     excessive space when the last content element is a definition list */
+  margin-bottom: 0;
+}
 div.tags {
+  /* compare with p */
   margin-top: 1em;
 }
 
