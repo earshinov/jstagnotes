@@ -91,7 +91,7 @@ html {
   }
   * html body {
     height: 100%;
-    width: expression((document.documentElement.clientWidth > 620) ? "520px" : "auto");
+    width: expression((document.documentElement.clientWidth > 620) ? "620px" : "auto");
   }
 }
 
@@ -385,9 +385,9 @@ pre {
      * If user makes his browser's window too small, preformatted blocks will
      * surprise him. It's his fault anyway that he uses IE6.
      *
-     * width: expression(this.width > 674 ? "674px" : this.width);
+     * width: expression(this.width > 584 ? "584px" : this.width);
      */
-    _width: 674px;
+    _width: 584px;
 
     max-height: 500px;
     *height: expression((this.scrollHeight > 500) ? "500px" : "auto");
