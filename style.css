@@ -266,21 +266,26 @@ div.note.selected {
   border: 1px Dotted DarkGray;
 }
 
-div.date {
-  float: right;
-}
-div.title {
-  text-align: center;
-}
-div.date,
-div.title,
-div.title a {
-  color: FireBrick;
-}
+.title { text-align: center; }
+.date, .title, .title a { color: FireBrick; }
 
-div.header {
+  /* Emulate table cells for proper horizontal alignment of the title
+     if it spans several lines.  IE < 8 doesn't support table-cells, so
+     stick to floats there.  Unfortunately, the order of <div class="date">
+     and <div class="title"> differs when floats/table-cells are used. */
+div.header { display: table-row; }
+div.title { display: table-cell; width: 100%; padding-right: .2em; *width: auto; }
+div.date { display: table-cell; *float: right; }
+
+  /* Support note header markup on tables as a workaround for users
+     who'd like to view their notes both in IE < 8 and modern browsers. */
+table.header { width: 100%; }
+table.header td { border: none; padding: 0; vertical-align: top; }
+table.header td.title { width: 100%; padding-right: .2em; }
+
+div.content {
   /* compare with p */
-  margin-bottom: 1em;
+  margin-top: 1em;
 }
 div.content > :last-child {
   /* In case tags are absent, this prevents too much whitespace between
