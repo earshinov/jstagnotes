@@ -126,8 +126,9 @@ a[href^='#']:not([href='#']) {
   text-decoration: none;
   border-bottom: 1px dashed #1D60A3;
 }
-a[href^='#footnote'] {
-  border-bottom-width: 0;
+a[href^='#'][href^='#footnote'] {
+  /* additional attribute selector is necessary to override border-bottom above */
+  border-bottom: none;
 }
 
 /*
