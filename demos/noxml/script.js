@@ -28,6 +28,8 @@ function array_remove(array, element){
 }
 
 function array_equal(first, second){
+  first = first || [];
+  second = second || [];
   if (first.length !== second.length)
     return false;
   for (var i = 0; i < first.length; i++)
@@ -36,10 +38,10 @@ function array_equal(first, second){
   return true;
 }
 
-jQuery.fn.any = function(fn){
+jQuery.any = function(obj, fn){
   var ret = false;
-  $(this).each(function(i, item){
-    if (fn.call(this, item)){
+  $.each(obj, function(i, item){
+    if (fn.call(this, i, item)){
       ret = true;
       return false; // break from 'each'
     }
@@ -47,15 +49,23 @@ jQuery.fn.any = function(fn){
   return ret;
 };
 
-jQuery.fn.all = function(fn){
+jQuery.fn.any = function(fn){
+  return $.any($(this), fn);
+};
+
+jQuery.all = function(obj, fn){
   var ret = true;
-  $(this).each(function(i, item){
-    if (!fn.call(this, item)){
+  $.each(obj, function(i, item){
+    if (!fn.call(this, i, item)){
       ret = false;
       return false; // break from 'each'
     }
   });
   return ret;
+};
+
+jQuery.fn.all = function(fn){
+  return $.all($(this), fn);
 };
 
 jQuery.fn.$indexOf = function(selectorOrElement){
@@ -300,7 +310,7 @@ var Filter = new function(){
   });
 
   function tagString(tag){
-    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a>";
+    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a> ";
   }
 
   this.tags = [];
@@ -315,7 +325,7 @@ var Filter = new function(){
 
   this.addTag = function(tag){
     this.tags.push(tag);
-    $(tagString(tag)).insertBefore($clear);
+    $clear.before(tagString(tag));
     $filter.show();
 
     if (TestOptions.test)
@@ -356,7 +366,7 @@ var Filter = new function(){
     else{
       $filter.show();
       $.each(this.tags, function(i, tag){
-        $(tagString(tag)).insertBefore($clear);
+        $clear.before(tagString(tag));
       });
     }
 
@@ -373,7 +383,7 @@ var Notes = new function(){
 
   function noteSatisfiesFilter($note){
     var tags = TagsCache.getNoteTags($note);
-    return $(Filter.tags).all(function(tag){
+    return $(Filter.tags).all(function(_, tag){
       return tags.indexOf(tag) !== -1;
     });
   }
