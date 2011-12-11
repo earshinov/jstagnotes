@@ -28,6 +28,8 @@ function array_remove(array, element){
 }
 
 function array_equal(first, second){
+  first = first || [];
+  second = second || [];
   if (first.length !== second.length)
     return false;
   for (var i = 0; i < first.length; i++)
