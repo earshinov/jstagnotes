@@ -706,7 +706,7 @@
   //  * Unlike the fragment and querystring methods, if a hash string beginning
   //    with # is specified as the params agrument, merge_mode defaults to 2.
 
-  jq_bbq.pushState = jq_bbq_pushState = function( params, merge_mode ) {
+  jq_bbq.pushState = jq_bbq_pushState = function( params, merge_mode, use_replace ) {
     if ( is_string( params ) && /^#/.test( params ) && merge_mode === undefined ) {
       // Params string begins with # and merge_mode not specified, so completely
       // overwrite window.location.hash.
@@ -718,10 +718,18 @@
       url = jq_param_fragment( window[ str_location ][ str_href ],
         has_args ? params : {}, has_args ? merge_mode : 2 );
 
-    // Set new window.location.href. If hash is empty, use just # to prevent
-    // browser from reloading the page. Note that Safari 3 & Chrome barf on
-    // location.hash = '#'.
-    window[ str_location ][ str_href ] = url + ( /#/.test( url ) ? '' : '#' );
+    if ( use_replace && location.replace )
+      location.replace(url);
+    else {
+      // Set new window.location.href. If hash is empty, use just # to prevent
+      // browser from reloading the page. Note that Safari 3 & Chrome barf on
+      // location.hash = '#'.
+      window[ str_location ][ str_href ] = url + ( /#/.test( url ) ? '' : '#' );
+    }
+  };
+
+  jq_bbq.replaceState = function( params, merge_mode ) {
+    jq_bbq_pushState( params, merge_mode, true );
   };
 
   // Method: jQuery.bbq.getState
