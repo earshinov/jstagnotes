@@ -614,7 +614,10 @@ var State = new function(){
    */
 
   /* Push state to jQuery BBQ plugin */
-  this.sync = function(){
+  this.sync = function(scroll){
+    if (scroll === undefined)
+      scroll = true;
+
     var state = {
       tags: Filter.tags,
       selected: selected
@@ -627,8 +630,8 @@ var State = new function(){
     if (tagBlock !== null)
       state["tagBlock"] = tagBlock;
 
-    this.push(state, ! scrollToAnchor);
-    if (scrollToAnchor){
+    this.push(state, scroll && !scrollToAnchor);
+    if (scroll && scrollToAnchor){
       //console.log("Calling scrollTo( <anchor> = #" + anchor + " )");
       $.scrollTo(Maps.fromId(anchor));
     }
@@ -829,9 +832,10 @@ $(document).ready(function(){
       }
 
       State.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
+      State.sync(!restoreScroll);
       if (restoreScroll)
         $(window).scrollTop(prevScroll + $this.offset().top - prevOffset);
-      State.sync();
+
       return false;
     });
 
