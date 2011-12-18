@@ -30,6 +30,8 @@ function array_remove(array, element){
 }
 
 function array_equal(first, second){
+  first = first || [];
+  second = second || [];
   if (first.length !== second.length)
     return false;
   for (var i = 0; i < first.length; i++)
@@ -38,10 +40,10 @@ function array_equal(first, second){
   return true;
 }
 
-jQuery.fn.any = function(fn){
+jQuery.any = function(obj, fn){
   var ret = false;
-  $(this).each(function(i, item){
-    if (fn.call(this, item)){
+  $.each(obj, function(i, item){
+    if (fn.call(this, i, item)){
       ret = true;
       return false; // break from 'each'
     }
@@ -49,15 +51,23 @@ jQuery.fn.any = function(fn){
   return ret;
 };
 
-jQuery.fn.all = function(fn){
+jQuery.fn.any = function(fn){
+  return $.any($(this), fn);
+};
+
+jQuery.all = function(obj, fn){
   var ret = true;
-  $(this).each(function(i, item){
-    if (!fn.call(this, item)){
+  $.each(obj, function(i, item){
+    if (!fn.call(this, i, item)){
       ret = false;
       return false; // break from 'each'
     }
   });
   return ret;
+};
+
+jQuery.fn.all = function(fn){
+  return $.all($(this), fn);
 };
 
 jQuery.fn.$indexOf = function(selectorOrElement){
@@ -317,7 +327,7 @@ var Filter = new function(){
   });
 
   function tagString(tag){
-    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a>";
+    return "<a href='#' class='note_tag chosen_tag'>" + tag + "</a> ";
   }
 
   this.tags = [];
@@ -332,7 +342,7 @@ var Filter = new function(){
 
   this.addTag = function(tag){
     this.tags.push(tag);
-    $(tagString(tag)).insertBefore($clear);
+    $clear.before(tagString(tag));
     $filter.show();
 
     if (TestOptions.test)
@@ -370,7 +380,7 @@ var Filter = new function(){
     else{
       $filter.show();
       $.each(this.tags, function(i, tag){
-        $(tagString(tag)).insertBefore($clear);
+        $clear.before(tagString(tag));
       });
     }
 
@@ -386,7 +396,7 @@ var Notes = new function(){
 
   function noteSatisfiesFilter($note){
     var tags = TagsCache.getNoteTags($note);
-    return $(Filter.tags).all(function(tag){
+    return $(Filter.tags).all(function(_, tag){
       return tags.indexOf(tag) !== -1;
     });
   }
@@ -476,13 +486,8 @@ var Notes = new function(){
 var State = new function(){
 
   var anchor = null;
+  var scrollToAnchor = false;
   var selected = [];
-
-  function scrollTo(id){
-    var $elem = $(Maps.fromId(id));
-    this.addSelected(id);
-    $.scrollTo($elem);
-  }
 
   /*
    * Functions for managing selected tag block.
@@ -524,16 +529,22 @@ var State = new function(){
    * Functions for managing the anchor (if any)
    */
 
+  // Flags for setAnchor()
+  this.SCROLL_PREVENT = -1; // don't scroll
+  this.SCROLL_AUTO = 0;     // default
+  this.SCROLL_FORCE = 1;    // scroll to anchor even if anchor hasn't changed
+
   /*
    * Set anchor
-   * @param anc           Current anchor or @c null
-   * @param forceScroll   Whether to scroll to anchor even if it hasn't changed
+   * @param anc               Current anchor or @c null
+   * @param scrollBehaviour   One of SCROLL_* constants
    */
-  this.setAnchor = function(anc, forceScroll){
+  this.setAnchor = function(anc, scrollBehaviour){
     if (anc === undefined)
       anc = null;
-    if (anc !== null && (anchor !== anc || forceScroll))
-      scrollTo.call(this, anc);
+    scrollToAnchor =
+      anc !== null && scrollBehaviour !== this.SCROLL_PREVENT &&
+      (anchor !== anc || scrollBehaviour === this.SCROLL_FORCE);
     if (anchor === anc)
       return false;
     anchor = anc;
@@ -543,6 +554,7 @@ var State = new function(){
   this.removeAnchor = function($note){
     if ($note.attr("id") === anchor){
       anchor = null;
+      scrollToAnchor = false;
       return true;
     }
     return false;
@@ -602,27 +614,70 @@ var State = new function(){
    */
 
   /* Push state to jQuery BBQ plugin */
-  this.sync = function(){
+  this.sync = function(scroll){
+    if (scroll === undefined)
+      scroll = true;
+
     var state = {
       tags: Filter.tags,
       selected: selected
     };
-    if (anchor !== null)
+    if (anchor !== null){
       state["anchor"] = anchor;
+      this.addSelected(anchor);
+    }
     var tagBlock = Cloud.getSelectedTagBlock();
     if (tagBlock !== null)
       state["tagBlock"] = tagBlock;
 
+    this.push(state, scroll && !scrollToAnchor);
+    if (scroll && scrollToAnchor){
+      //console.log("Calling scrollTo( <anchor> = #" + anchor + " )");
+      $.scrollTo(Maps.fromId(anchor));
+    }
+  };
+
+  this.push = function(state, restoreScroll, useReplace) {
+    if (restoreScroll === undefined) restoreScroll = true;
+
     var prevScroll;
-    if (Filter.tags.length === 0 && selected.length === 0 && anchor === null)
+    if (restoreScroll && this.isEmpty(state))
       // According to BBQ plugin documentation,
       // setting empty state may cause browser to scroll
       prevScroll = $(window).scrollTop();
 
-    $.bbq.pushState(state, 2);
+    // Replace URL
+    // We intentionally don't check for meaningful changes in case of replace,
+    // because writing "meaningless" bits like remembered scroll position
+    // is what we use replace mode for.
+    if( useReplace || State.hasMeaningfulChanges(state) )
+      $.bbq.pushState(state, 2, useReplace);
 
-    if (prevScroll !== undefined)
+    if (prevScroll !== undefined){
+      //console.log("Calling scrollTo( <pos before setting empty #> = " + prevScroll + " )");
       $.scrollTo(prevScroll);
+    }
+  };
+
+  this.replace = function(state, restoreScroll) {
+    this.push(state, restoreScroll, true);
+  };
+
+  this.hasMeaningfulChanges = function(state){
+    var currentState = $.bbq.getState();
+    return ! (
+      array_equal(state["tags"], currentState["tags"]) &&
+      array_equal(state["selected"], currentState["selected"]) &&
+      state["anchor"]   == currentState["anchor"] &&
+      state["tagBlock"] == currentState["tagBlock"] );
+  };
+
+  this.isEmpty = function(state){
+    return $.all(state, function(key, value){
+      return
+        key === "tags" && value.length === 0 ||
+        key === "selected" && value.length === 0;
+    });
   };
 
 }();
@@ -706,18 +761,44 @@ $(document).ready(function(){
     initPrinting();
   }
 
+  function hashchangeHandler(event){
+    State.setSelectedTagBlock(event.getState("tagBlock"));
+    if (!State.setTags(event.getState("tags")) && hashchangeHandler.firstTime)
+      // Initialize the tag cloud if it wasn't already done by State
+      Cloud.recalculate();
+    State.setSelected(event.getState("selected"), true);
+
+    // Read scroll position.
+    var scrollPos = event.getState("scroll");
+    if (scrollPos == hashchangeHandler.ignoredScroll)
+      scrollPos = undefined;
+    hashchangeHandler.ignoredScroll = null;
+    // If scroll position is present, we shouldn't scroll to anchor
+    var anchorScrollBehaviour = ( scrollPos === undefined
+      ? State.SCROLL_AUTO
+      : State.SCROLL_PREVENT );
+
+    State.setAnchor(event.getState("anchor"), anchorScrollBehaviour);
+
+    State.sync();
+
+    if (scrollPos !== undefined){
+      // Remove the remembered scroll position.  This "hashchange"
+      // handler will be called again, but it will do nothing
+      var state = event.getState();
+      delete state["scroll"];
+      State.replace(state, false);
+      // Restore the scroll position
+      //console.log("Calling scrollTo( <remembered scroll pos> = " + scrollPos + " )");
+      $(window).scrollTo(scrollPos);
+    }
+  }
+
   function basicInit(){
-    var init = true;
-    $(window).bind("hashchange", function(event){
-      State.setSelectedTagBlock(event.getState("tagBlock"));
-      if (!State.setTags(event.getState("tags")) && init)
-        /* Initialize the tag cloud if it wasn't already done by State */
-        Cloud.recalculate();
-      State.setSelected(event.getState("selected"), true);
-      State.setAnchor(event.getState("anchor"));
-      State.sync();
-    }).trigger("hashchange");
-    init = false;
+    hashchangeHandler.firstTime = true;
+    hashchangeHandler.ignoredScroll = null;
+    $(window).bind("hashchange", hashchangeHandler).trigger("hashchange");
+    hashchangeHandler.firstTime = false;
   }
 
   function bindEventHandlers(){
@@ -751,16 +832,28 @@ $(document).ready(function(){
       }
 
       State.toggleTag($this.text(), !$this.hasClass("chosen_tag"));
+      State.sync(!restoreScroll);
       if (restoreScroll)
         $(window).scrollTop(prevScroll + $this.offset().top - prevOffset);
-      State.sync();
+
       return false;
     });
 
-    getLocalLinks().click(function(){
-      State.setAnchor($(this).attr("href").substr(1), true);
+    getLocalLinks().click(function(e){
+      // It's necessary to use these methods instead of returning false.
+      // Returning false does not work reliably due to lags caused by
+      // the invocation of `replaceState()`
+      e.stopPropagation();
+      e.preventDefault();
+
+      // Remember this scroll position to restore on Back button click.
+      // NOTE: This won't work nicely if user resizes the window.
+      var scrollPos = $(window).scrollTop();
+      hashchangeHandler.ignoredScroll = scrollPos;
+      $.bbq.replaceState({ scroll: scrollPos }, 0);
+
+      State.setAnchor($(this).attr("href").substr(1), State.SCROLL_FORCE);
       State.sync();
-      return false;
     });
   }
 
