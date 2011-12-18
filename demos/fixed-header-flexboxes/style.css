@@ -91,7 +91,7 @@ html {
   }
   * html body {
     height: 100%;
-    width: expression((document.documentElement.clientWidth > 620) ? "520px" : "auto");
+    width: expression((document.documentElement.clientWidth > 620) ? "620px" : "auto");
   }
   html.flexboxes body {
     height: 100%;
@@ -156,8 +156,9 @@ a[href^='#']:not([href='#']) {
   text-decoration: none;
   border-bottom: 1px dashed #1D60A3;
 }
-a[href^='#footnote'] {
-  border-bottom-width: 0;
+a[href^='#'][href^='#footnote'] {
+  /* additional attribute selector is necessary to override border-bottom above */
+  border-bottom: none;
 }
 
 /*
@@ -225,6 +226,9 @@ a.note_tag.chosen_tag {
 #control div {
   margin: 5px;
 }
+#control div div {
+  margin: 5px 0;
+}
 
 #popular_tags,
 #all_tags {
@@ -261,11 +265,6 @@ a.note_tag.chosen_tag {
   margin: 0;
   padding: 0;
   margin-right: 2px;
-}
-
-#filter a.note_tag {
-  /* separate chosen tags from the clear button */
-  margin-right: 5px;
 }
 
 @media screen {
@@ -314,24 +313,36 @@ div.note.selected {
   border: 1px Dotted DarkGray;
 }
 
-div.date {
-  float: right;
-}
-div.title {
-  text-align: center;
-}
-div.date,
-div.title,
-div.title a {
-  color: FireBrick;
-}
+.title { text-align: center; }
+.date, .title, .title a { color: FireBrick; }
 
-/* compare with p */
-div.header {
-  margin-bottom: 1.2em;
+  /* Emulate table cells for proper horizontal alignment of the title
+     if it spans several lines.  IE < 8 doesn't support table-cells, so
+     stick to floats there.  Unfortunately, the order of <div class="date">
+     and <div class="title"> differs when floats/table-cells are used. */
+div.header { display: table-row; }
+div.title { display: table-cell; width: 100%; padding-right: .2em; *width: auto; }
+div.date { display: table-cell; *float: right; }
+
+  /* Support note header markup on tables as a workaround for users
+     who'd like to view their notes both in IE < 8 and modern browsers. */
+table.header { width: 100%; }
+table.header td { border: none; padding: 0; vertical-align: top; }
+table.header td.title { width: 100%; padding-right: .2em; }
+
+div.content {
+  /* compare with p */
+  margin-top: 1em;
+}
+div.content > :last-child {
+  /* In case tags are absent, this prevents too much whitespace between
+     the content and the bottom border of the note.  Also, this removes
+     excessive space when the last content element is a definition list */
+  margin-bottom: 0;
 }
 div.tags {
-  margin-top: 1.2em;
+  /* compare with p */
+  margin-top: 1em;
 }
 
 /* --- Note content decoration */
@@ -342,7 +353,7 @@ a.img {
 
 strong {
   font-weight: normal;
-  color: #222222;
+  color: #333333;
 }
 
 blockquote {
@@ -367,7 +378,7 @@ dl {
   padding: 0;
 }
 dt {
-  margin: 1.2em 0 .8em;
+  margin: 1em 0 .6em;
 }
 dd {
   margin: 0 0 0 2.5em;
@@ -376,7 +387,7 @@ dd {
 
 p {
   /* compare with div.header and div.tags */
-  margin: 1.2em 0;
+  margin: 1em 0;
   padding: 0;
 }
 h2, h3, h4 {
@@ -389,7 +400,7 @@ h2, h3, h4 {
    * for headers of different levels. It seems to me that headers
    * with different bottom margins look not so good.
    */
-  margin-top: 1.2em;
+  margin-top: 1em;
   margin-bottom: 10px;
 }
 h2 { font-weight: normal; font-size: 1.2em; }
@@ -427,9 +438,9 @@ pre {
      * If user makes his browser's window too small, preformatted blocks will
      * surprise him. It's his fault anyway that he uses IE6.
      *
-     * width: expression(this.width > 674 ? "674px" : this.width);
+     * width: expression(this.width > 584 ? "584px" : this.width);
      */
-    _width: 674px;
+    _width: 584px;
 
     max-height: 500px;
     *height: expression((this.scrollHeight > 500) ? "500px" : "auto");
@@ -460,10 +471,21 @@ td, th {
   font-weight: normal;
   padding: 5px;
 }
+th {
+  color: #333;
+}
 
-code, th {
-  color: #333333;
+code {
+  color: #333;
+  background-color: #eee;
+  padding: 1px 2px;
+  font-size: smaller;
+}
+.title code, a code, pre code {
+  color: inherit;
+  background-color: transparent;
+  padding: 0;
 }
 pre code {
-  color: #444444;
+  color: #444;
 }

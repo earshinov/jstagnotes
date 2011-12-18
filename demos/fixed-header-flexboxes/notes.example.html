@@ -17,11 +17,11 @@
 
 <div class="note">
   <div class="header">
-    <div class="date">25.09.2010</div>
     <div class="title">
       <a href="...">
         ...</a>
     </div>
+    <div class="date">25.09.2010</div>
   </div>
   <div class="content">
     ...
@@ -34,10 +34,95 @@
 
 -->
 
+
+<div class="note" id="test-note">
+  <div class="header">
+    <div class="title">Test note</div>
+    <div class="date">20.11.2011</div>
+  </div>
+  <div class="content">
+    If you are viewing this page in Internet Explorer &lt; 8, the date
+    within this note's header will be positioned incorrectly.  To
+    correct this, you can:
+    <ul>
+      <li>
+        In the source code of the note, place "date" block before
+        the "title" block, but then the page will look incorrectly
+        in other browsers (IE ≥ 8, Firefox etc.).  This way is
+        demostrated in the <a href="#test-note-2">Test note 2</a>
+      </li>
+      <li>
+        In the source code of the note, use "table" markup instead
+        of "div" markup.  The page will look nice in all supported
+        browsers and… note title will be horizontally aligned even
+        if it spans several lines.  But the markup itself is not
+        that pleasant.  This way is demonstrated in the
+        <a href="#note-with-table-markup">corresponding note</a>.
+      </li>
+    </ul>
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">notes</a>
+    <a class="note_tag" href="#">markup</a>
+  </div>
+</div>
+
+<div class="note" id="test-note-2">
+  <div class="header">
+    <div class="date">20.11.2011</div>
+    <div class="title">Test note 2</div>
+  </div>
+  <div class="content">
+    In the source code of this note, "date" block is positioned before
+    "title" block, so that the note looks properly in IE &lt; 8.
+    However, when this technique is used:
+
+    <ul>
+      <li>
+        The note will look incorrectly in other browsers (date will
+        be positioned to the left of the title)
+      </li>
+      <li>
+        In IE &lt; 8, the title won't be horizontally aligned if it
+        spans several lines
+      </li>
+    </ul>
+
+    See also the first <a href="#test-note">Test note</a> (or press Back
+    in your browser if you came from there).
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">notes</a>
+    <a class="note_tag" href="#">markup</a>
+  </div>
+</div>
+
+<div class="note" id="note-with-table-markup">
+  <table class="header"><tr>
+    <td class="title">The note with "table" markup</td>
+    <td class="date">20.11.2011</td>
+  </tr></table>
+  <div class="content">
+    This note's header should look correctly in all supported browsers
+    Congratulations!…  But I'd recommend you to forget about old
+    Internet Explorer and just stick with "div" markup, which is used
+    in the first note, and the following notes, and also in the note
+    template (see page source code).  That markup is more pretty
+    and… well… right.  When there will styling bugfixes or
+    enhacements, the changes will be applied to "div" markup in the
+    first place, and "table" markup will possibly become deprecated!
+  </div>
+  <div class="tags">
+    <a class="note_tag" href="#">notes</a>
+    <a class="note_tag" href="#">markup</a>
+  </div>
+</div>
+
+
 <div class="note">
   <div class="header">
-    <div class="date">02.06.2009</div>
     <div class="title">Link</div>
+    <div class="date">02.06.2009</div>
   </div>
   <div class="content">
     <p>Пример ссылки на другую заметку: <a href="#link_target">Link target</a>.</p>
@@ -50,8 +135,8 @@
 
 <div class="note" id="link_target">
   <div class="header">
-    <div class="date">02.06.2009</div>
     <div class="title">Link target</div>
+    <div class="date">02.06.2009</div>
   </div>
   <div class="content">
     Просто заметка, на которую ссылается другая.
@@ -61,8 +146,8 @@
 
 <div class="note">
   <div class="header">
-    <div class="date">02.06.2009</div>
     <div class="title">Пример заметки с другим форматированием</div>
+    <div class="date">02.06.2009</div>
   </div>
   <div class="content">
     <h2>Заголовок h2</h2>
@@ -84,8 +169,8 @@
 
 <div class="note">
   <div class="header">
-    <div class="date">02.06.2009</div>
     <div class="title">Пример заметки с pre</div>
+    <div class="date">02.06.2009</div>
   </div>
   <div class="content">
     <p>Можно использовать моноширинный текст прямо посреди строки,
@@ -140,8 +225,8 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">02.06.2009</div>
     <div class="title">Длинный pre</div>
+    <div class="date">02.06.2009</div>
   </div>
   <div class="content">
 <pre>This is a very long line. This is a very long line. This is a very long line. This is a very long line.</pre>
@@ -154,8 +239,8 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">02.06.2009</div>
     <div class="title">Пример заметки с таблицей</div>
+    <div class="date">02.06.2009</div>
   </div>
   <div class="content">
     <table>
@@ -183,11 +268,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">14.04.2007</div>
     <div class="title">
       <a href="http://www.calc5.com/">
         Online calculator with symbolic calculations and graphs</a>
     </div>
+    <div class="date">14.04.2007</div>
   </div>
   <div class="content">
     Онлайн-калькулятор, умеющий символьные вычисления и построение графиков
@@ -199,11 +284,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">11.04.2007</div>
     <div class="title">
       <a href="http://www.Linux.org.ru/books/GNU/emacs/emacs_toc.html">
         Руководство по GNU Emacs</a>
     </div>
+    <div class="date">11.04.2007</div>
   </div>
   <div class="content">
     Руководство по <strong>GNU Emacs</strong> на русском языке
@@ -215,11 +300,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">25.02.2007</div>
     <div class="title">
       <a href="http://www.walterzorn.com/grapher/grapher_e.htm">
         Function Grapher Online</a>
     </div>
+    <div class="date">25.02.2007</div>
   </div>
   <div class="content">
     Построитель графиков
@@ -231,11 +316,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">05.02.2007</div>
     <div class="title">
       <a href="http://www.htmlbook.ru/">
         Документация по тегам HTML и свойствам CSS</a>
     </div>
+    <div class="date">05.02.2007</div>
   </div>
   <div class="content">
     Документация по тегам HTML и свойствам CSS
@@ -248,11 +333,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">05.02.2007</div>
     <div class="title">
       <a href="http://tools.decisionsoft.com/schemaValidate/">
         Онлайн валидатор для XML Schema</a>
     </div>
+    <div class="date">05.02.2007</div>
   </div>
   <div class="content">
     Онлайн валидатор для XML Schema
@@ -267,10 +352,10 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">02.02.2007</div>
     <div class="title">
       <a href="http://bookgo.org/">Book Go!</a>
     </div>
+    <div class="date">02.02.2007</div>
   </div>
   <div class="content">
     База книг для скачивания, преимущественно англоязычных
@@ -283,10 +368,10 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">29.01.2007</div>
     <div class="title">
       <a href="http://doc.trolltech.com/">Qt Documentation</a>
     </div>
+    <div class="date">29.01.2007</div>
   </div>
   <div class="content">
     Документация Qt на английском языке
@@ -299,11 +384,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">08.01.2007</div>
     <div class="title">
       <a href="http://www.possibility.com/Cpp/CppCodingStandard.html">
         C++ coding standard</a>
     </div>
+    <div class="date">08.01.2007</div>
   </div>
   <div class="content">
     Руководство по написанию понятного и идеологически правильного кода на C++
@@ -316,10 +401,10 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://www.catch22.net/tuts/selfdel">Self-Deleting Executables</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Методы написания самоудаляющихся программ для Windows
@@ -332,10 +417,10 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://www.Linux.org.ru/books/lor-faq/">LINUX.ORG.RU FAQ</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Очень полезный русскоязычный FAQ по Linux
@@ -347,10 +432,10 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://www.ixbt.com/storage/ntfs.html">Файловая система NTFS</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Устройство файловой системы NTFS
@@ -362,11 +447,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://soft32.ru/delphi.shtml?topic=os&amp;n:title=app_xp_hide">
         Прячем программу от Ctrl Alt Del</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Код, который надо написать, чтобы скрыть программу от Диспетчера задач.
@@ -380,11 +465,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://wasm.ru/article.php?article=apihook_1">
         Перехват API функций в Windows NT</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Перехват API функций в Windows NT
@@ -397,11 +482,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://wasm.ru/article.php?article=lockfileswork">
         Методы работы с занятыми файлами</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Как в своей программе прочитать файл, занятый другим процессом
@@ -414,11 +499,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://forum.vingrad.ru/index.php?showtopic=55987">
         Стандарты оформления кода</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Подборка стандартов оформления кода для различных языков
@@ -430,11 +515,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://www.wilcob.com/Wilco/XsltTransformer.aspx">
         Online XSLT Transformer</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Сайт, который умеет преобразовывать переданный XML-файл, используя
@@ -449,11 +534,11 @@ this.update = function(){
 
 <div class="note">
   <div class="header">
-    <div class="date">22.10.2007</div>
     <div class="title">
       <a href="http://www.google.ru/intl/ru/help/features.html">
         Фичи поиска в Google</a>
     </div>
+    <div class="date">22.10.2007</div>
   </div>
   <div class="content">
     Фичи поиска в Google
