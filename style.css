@@ -304,17 +304,16 @@ a.img {
   border-width: 0;
 }
 
-strong {
+b, strong {
   font-weight: normal;
   color: #333333;
 }
 
 blockquote {
   margin-left: 20px;
+  margin-right: 0;
   border-left: 1px Solid DarkGray;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 5px 0 5px 10px;
 }
 
 ol, ul {
