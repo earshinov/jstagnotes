@@ -304,7 +304,7 @@ a.img {
   border-width: 0;
 }
 
-strong {
+b, strong {
   font-weight: normal;
   color: #333333;
 }
