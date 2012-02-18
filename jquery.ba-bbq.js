@@ -706,6 +706,13 @@
   //  * Unlike the fragment and querystring methods, if a hash string beginning
   //    with # is specified as the params agrument, merge_mode defaults to 2.
 
+  // NOTE: This pushState() function was modified to take `use_replace`
+  // parameter.  The original function does not support it, because
+  // `location.replace()` doesn't work properly in some (not very
+  // popular and important) browsers; follow the link below.
+  //
+  // <https://github.com/cowboy/jquery-bbq/issues/23#issuecomment-4008251>
+
   jq_bbq.pushState = jq_bbq_pushState = function( params, merge_mode, use_replace ) {
     if ( is_string( params ) && /^#/.test( params ) && merge_mode === undefined ) {
       // Params string begins with # and merge_mode not specified, so completely
